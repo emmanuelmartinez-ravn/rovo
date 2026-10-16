@@ -18,6 +18,10 @@ The core unit of work is a **scenario**: a config of `label → value` entries, 
 
 When implementing a feature, check MVP.md's acceptance criteria for it rather than inferring behavior from the stub UI.
 
+### Mockup
+
+`ROVO-MOCKUP.html` is the design reference. Open it at **http://127.0.0.1:5500/ROVO-MOCKUP.html**, served by the VS Code Live Server extension, never as a `file://` path or by parsing the file. It's a bundled page whose screens render in JavaScript inside `blob:` iframes, so only the served page shows them as designed. If that URL doesn't respond, ask the user to start Live Server rather than working around it. The Rovo panel header is the same on every screen, so one screen is enough for it.
+
 ## Commands
 
 - `pnpm dev` — start the Vite dev server (HMR). This project uses pnpm (see `pnpm-lock.yaml`), not npm/yarn.
@@ -50,10 +54,6 @@ Everything in `src/` lives in one of three folders. Layering runs one way — `s
 - **`src/features/<feature-name>/`** — one kebab-case folder per MVP.md feature (`branch-scenario-replay`, `edge-case-swap`, `run-log`, …), holding that feature's UI, state and logic. May import `core/` and `shared/`. **Features never import each other**: code two features need moves down to `core/` (Rovo-specific) or `shared/` (generic).
 
 Imports: use relative paths inside a folder and the `@/` alias (`@/core/…`, `@/shared/…`, mapped to `src/` in `tsconfig.app.json` and `vite.config.ts`) to reach another top-level folder. Lint catches cross-feature imports only through `@/features/…`; a relative `../other-feature/…` slips past it, so don't write one.
-
-## Mockup
-
-`ROVO-MOCKUP.html` is the design reference. Open it at **http://127.0.0.1:5500/ROVO-MOCKUP.html**, served by the VS Code Live Server extension, never as a `file://` path or by parsing the file. It's a bundled page whose screens render in JavaScript inside `blob:` iframes, so only the served page shows them as designed. If that URL doesn't respond, ask the user to start Live Server rather than working around it. The Rovo panel header is the same on every screen, so one screen is enough for it.
 
 ## Architecture
 

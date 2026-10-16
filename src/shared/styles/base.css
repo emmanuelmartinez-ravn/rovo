@@ -1,0 +1,62 @@
+/*
+ * Global reset and element defaults. Reads semantic tokens only.
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: light;
+  background: var(--color-bg);
+}
+
+/* Set on body, not :root: Chrome's extension-page stylesheet sets body's font itself. */
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text);
+  font-synthesis: none;
+  text-rendering: optimizelegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-weight: var(--font-weight-heading);
+  color: var(--color-text-strong);
+}
+
+h1 {
+  font-size: var(--font-size-heading-1);
+}
+
+h2 {
+  font-size: var(--font-size-heading-2);
+}
+
+code {
+  border-radius: var(--radius-code);
+  padding: var(--size-hairline) var(--space-xs);
+  font-family: var(--font-code);
+  font-size: var(--font-size-code);
+  color: var(--color-text-strong);
+  background: var(--color-code-bg);
+}

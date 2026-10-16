@@ -1,0 +1,49 @@
+.root {
+  --spinner-size: var(--size-icon-sm);
+  --spinner-stroke: var(--border-width-medium);
+  --spinner-track-color: var(--color-accent-subtle);
+  --spinner-indicator-color: var(--color-accent);
+  --spinner-duration: var(--motion-spin-duration);
+
+  display: inline-flex;
+  align-items: center;
+}
+
+.md {
+  --spinner-size: var(--size-icon-md);
+  --spinner-stroke: var(--border-width-thick);
+}
+
+.ring {
+  display: inline-block;
+  width: var(--spinner-size);
+  height: var(--spinner-size);
+  border: var(--spinner-stroke) solid var(--spinner-track-color);
+  border-top-color: var(--spinner-indicator-color);
+  border-radius: var(--radius-round);
+  animation: spin var(--spinner-duration) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    --spinner-track-color: var(--color-accent);
+    --spinner-duration: var(--motion-pulse-duration);
+  }
+
+  .ring {
+    animation-name: pulse;
+    animation-timing-function: ease-in-out;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: var(--opacity-muted);
+  }
+}

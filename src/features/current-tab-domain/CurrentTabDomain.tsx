@@ -1,18 +1,19 @@
 import { useActiveTabDomain } from '@/core/tabs/useActiveTabDomain.ts'
 import { Spinner } from '@/shared/ui/Spinner.tsx'
+import styles from './CurrentTabDomain.module.css'
 
 export function CurrentTabDomain() {
   const state = useActiveTabDomain()
 
   return (
-    <div className="flex min-h-6 items-center text-text-meta">
+    <div className={styles.root}>
       {state.status === 'loading' && <Spinner label="Reading current tab" />}
       {state.status === 'error' && <span>Couldn't read this tab</span>}
       {state.status === 'ready' &&
         (state.domain === null ? (
           <span>No website on this tab</span>
         ) : (
-          <span className="font-mono text-text-strong">{state.domain}</span>
+          <span className={styles.domain}>{state.domain}</span>
         ))}
     </div>
   )

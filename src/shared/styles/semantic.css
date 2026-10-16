@@ -1,0 +1,79 @@
+/*
+ * Tier 2 — semantic tokens. Names say what a value is for, never what it is.
+ *
+ * Each one is a var() of a primitive from primitives.css. Components read
+ * these, either directly or through their own component tokens. A role that
+ * isn't here yet is added here (mapped to a primitive) before a component
+ * uses it.
+ */
+:root {
+  /* Surface */
+  --color-bg: var(--color-white);
+  --color-bg-subtle: var(--color-gray-50);
+  --color-code-bg: var(--color-gray-100);
+
+  /* Text */
+  --color-text: var(--color-gray-700);
+  --color-text-strong: var(--color-gray-950);
+  --color-text-meta: var(--color-gray-600);
+
+  /* Border */
+  --color-border: var(--color-gray-200);
+  --color-border-strong: var(--color-gray-300);
+  --color-border-dashed: var(--color-gray-400);
+
+  /* Accent */
+  --color-accent: var(--color-blue-700);
+  --color-accent-hover: var(--color-blue-800);
+  --color-accent-subtle: var(--color-blue-50);
+
+  /* Status */
+  --color-danger: var(--color-red-700);
+  --color-danger-bg: var(--color-red-50);
+  --color-success: var(--color-green-700);
+  --color-success-bg: var(--color-green-50);
+  --color-warning: var(--color-orange-700);
+  --color-warning-bg: var(--color-orange-50);
+
+  /* Space */
+  --space-2xs: var(--spacing-0-5);
+  --space-xs: var(--spacing-1);
+  --space-sm: var(--spacing-2);
+  --space-md: var(--spacing-3);
+  --space-lg: var(--spacing-4);
+  --space-xl: var(--spacing-6);
+
+  /* Size */
+  --size-hairline: var(--spacing-px);
+  --size-icon-sm: var(--spacing-4);
+  --size-icon-md: var(--spacing-6);
+
+  /* Border width */
+  --border-width-thin: var(--border-1);
+  --border-width-medium: var(--border-2);
+  --border-width-thick: var(--border-3);
+
+  /* Radius */
+  --radius-code: var(--radius-sm);
+  --radius-round: var(--radius-full);
+
+  /* Typography */
+  --font-body: var(--font-sans);
+  --font-code: var(--font-mono);
+  --font-size-body: var(--text-sm);
+  --font-size-code: var(--text-xs);
+  --font-size-heading-1: var(--text-lg);
+  --font-size-heading-2: var(--text-base);
+  --font-weight-body: var(--font-weight-normal);
+  --font-weight-heading: var(--font-weight-semibold);
+  --line-height-body: var(--leading-normal);
+
+  /* Elevation */
+  --shadow-menu: var(--shadow-lg);
+  --shadow-modal: var(--shadow-xl);
+
+  /* Opacity and motion */
+  --opacity-muted: var(--opacity-50);
+  --motion-spin-duration: var(--duration-1000);
+  --motion-pulse-duration: var(--duration-2000);
+}

@@ -27,7 +27,18 @@
     "typescript/no-unsafe-enum-comparison": "error",
     "typescript/no-unsafe-unary-minus": "error",
     "typescript/no-unsafe-declaration-merging": "error",
-    "typescript/no-unsafe-function-type": "error"
+    "typescript/no-unsafe-function-type": "error",
+    "react/forbid-dom-props": [
+      "error",
+      {
+        "forbid": [
+          {
+            "propName": "style",
+            "message": "Style through a CSS Module class and tokens, not inline styles."
+          }
+        ]
+      }
+    ]
   },
   "overrides": [
     {

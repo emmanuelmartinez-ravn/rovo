@@ -1,8 +1,9 @@
 import { CurrentTabDomain } from '@/features/current-tab-domain/CurrentTabDomain.tsx'
+import styles from './App.module.css'
 
 function App() {
   return (
-    <main className="flex flex-1 flex-col gap-1 p-4">
+    <main className={styles.root}>
       <h1>Rovo</h1>
       <CurrentTabDomain />
     </main>

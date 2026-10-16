@@ -22,7 +22,7 @@ When implementing a feature, check MVP.md's acceptance criteria for it rather th
 
 - `pnpm dev` — start the Vite dev server (HMR). This project uses pnpm (see `pnpm-lock.yaml`), not npm/yarn.
 - `pnpm build` — type-check (`tsc -b`) then production-build via Vite. Building is how you type-check this project; there is no separate typecheck script.
-- `pnpm lint` — run Oxlint (`.oxlintrc.json`) in type-aware mode (requires the `oxlint-tsgolint` devDependency, already installed).
+- `pnpm lint` — run Oxlint (`.oxlintrc.json`) in type-aware mode (requires the `oxlint-tsgolint` devDependency, already installed), then Stylelint (`stylelint.config.mjs`) over `src/**/*.css` for the design-token rules.
 - `pnpm preview` — preview the production build.
 - There is no test runner configured yet.
 
@@ -51,10 +51,26 @@ Everything in `src/` lives in one of three folders. Layering runs one way — `s
 
 Imports: use relative paths inside a folder and the `@/` alias (`@/core/…`, `@/shared/…`, mapped to `src/` in `tsconfig.app.json` and `vite.config.ts`) to reach another top-level folder. Lint catches cross-feature imports only through `@/features/…`; a relative `../other-feature/…` slips past it, so don't write one.
 
+## Design tokens
+
+Styling is CSS Modules on three token tiers. There is no utility-class framework: a component's look lives in its own `Component.module.css`, imported as `styles` and applied with `className={styles.root}`. Stylelint enforces the tiers, so a violation fails `pnpm lint`.
+
+1. **Primitive** — `src/shared/styles/primitives.css`. Raw values named on Tailwind's scales (`--color-gray-700`, `--color-blue-700`, `--spacing-4`, `--radius-md`, `--text-sm`). The values are the mockup's, not Tailwind's. This is the **only** file holding literal values (hex, `rgb()`, `px`, `s`/`ms`).
+2. **Semantic** — `src/shared/styles/semantic.css`. Named for the role, never the value (`--color-text-meta`, `--color-accent`, `--space-lg`, `--size-icon-sm`, `--radius-code`), and each is exactly one `var()` of a primitive. The only file that reads primitives.
+3. **Component** — declared on the root class of each `*.module.css`, prefixed with the component name (`--spinner-size`, `--app-padding`), each a `var()` of a semantic token. Variants and states override the component tokens (`.md { --spinner-size: var(--size-icon-md) }`) instead of the properties.
+
+Rules:
+- Every visual value in a component goes through a component or semantic token, never a primitive or a literal. A role with no semantic token gets one added to `semantic.css` (mapped to a primitive) before it's used. A value with no primitive is a question for the designer, not a new literal in a module.
+- No inline `style` props: Oxlint's `react/forbid-dom-props` rejects them.
+- Global element defaults (reset, `body`, headings, `code`) live in `src/shared/styles/base.css`, which reads semantic tokens only. Typography is set on `body`, not `:root`, because Chrome's extension-page stylesheet sets `body`'s font itself.
+- Adding a primitive means extending the `PRIMITIVE` pattern in `stylelint.config.mjs` too, or lint won't recognize it as one.
+
+Building a new component from a design runs through the `build-component` skill.
+
 ## Architecture
 
 - **`manifest.json`** declares this as a side-panel extension: the `sidePanel` permission is granted, and `action` + `side_panel.default_path: index.html` mean clicking the toolbar icon opens the extension UI in Chrome's side panel, not a popup. Moving an entry point means updating its path here (and in `index.html` for the side panel).
 - **`src/core/background/background.ts`** is the MV3 service worker. Today it only sets `openPanelOnActionClick: true`. Logic that needs to run independent of the side panel's lifetime (e.g. coordinating with content scripts, persisting state across side-panel open/close) belongs here.
-- **`src/core/app/`** is the side panel UI: `main.tsx` (loaded by `index.html`) renders `App.tsx`; `index.css` holds Tailwind and the design tokens. This is where features get composed into the scenario editor/runner UI described in MVP.md.
+- **`src/core/app/`** is the side panel UI: `main.tsx` (loaded by `index.html`) renders `App.tsx` and imports the global stylesheet `@/shared/styles/index.css`. This is where features get composed into the scenario editor/runner UI described in MVP.md.
 - **Form interaction** (finding fields by label, filling them, waiting for conditional fields to appear) will need a content script injected into the tested page — none exists yet. It belongs in `src/core/` (e.g. `src/core/content/`), and it needs its own entry in `manifest.json` (`content_scripts`) and `permissions`/`host_permissions` as needed, and `vite.config.ts`'s crx plugin picks it up from the manifest automatically.
 - TypeScript is split into two project references (`tsconfig.app.json` for `src/`, targeting ES2023/DOM with `chrome` types; `tsconfig.node.json` for `vite.config.ts`) under the root `tsconfig.json` — this is why `tsc -b` (build mode) is used rather than a plain `tsc`.

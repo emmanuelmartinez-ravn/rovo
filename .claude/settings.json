@@ -1,5 +1,10 @@
 {
   "enabledPlugins": {
     "superdesign@claude-plugins-official": true
-  }
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "includeCoAuthoredBy": false
 }

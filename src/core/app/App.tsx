@@ -1,12 +1,12 @@
-import { CurrentTabDomain } from '@/features/current-tab-domain/CurrentTabDomain.tsx'
+import { Header } from './Header.tsx'
 import styles from './App.module.css'
 
 function App() {
   return (
-    <main className={styles.root}>
-      <h1>Rovo</h1>
-      <CurrentTabDomain />
-    </main>
+    <div className={styles.root}>
+      <Header />
+      <main className={styles.content} />
+    </div>
   )
 }
 

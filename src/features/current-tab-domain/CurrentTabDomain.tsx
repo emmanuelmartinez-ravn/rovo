@@ -8,12 +8,16 @@ export function CurrentTabDomain() {
   return (
     <div className={styles.root}>
       {state.status === 'loading' && <Spinner label="Reading current tab" />}
-      {state.status === 'error' && <span>Couldn't read this tab</span>}
+      {state.status === 'error' && (
+        <span className={styles.message}>Couldn't read this tab</span>
+      )}
       {state.status === 'ready' &&
         (state.domain === null ? (
-          <span>No website on this tab</span>
+          <span className={styles.message}>No website on this tab</span>
         ) : (
-          <span className={styles.domain}>{state.domain}</span>
+          <span className={styles.domain} title={state.domain}>
+            {state.domain}
+          </span>
         ))}
     </div>
   )

@@ -1,0 +1,34 @@
+.root {
+  --header-height: var(--size-header);
+  --header-padding-inline: var(--space-lg);
+  --header-background: var(--color-bg);
+  --header-border-width: var(--border-width-thin);
+  --header-border-color: var(--color-border);
+  --header-gap: var(--space-md);
+  --header-brand-gap: var(--space-sm);
+  --header-brand-color: var(--color-text-strong);
+  --header-brand-font-size: var(--font-size-body);
+  --header-brand-font-weight: var(--font-weight-heading);
+
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--header-gap);
+  height: var(--header-height);
+  padding: 0 var(--header-padding-inline);
+  border-bottom: var(--header-border-width) solid var(--header-border-color);
+  background: var(--header-background);
+}
+
+.brand {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--header-brand-gap);
+  font-size: var(--header-brand-font-size);
+  font-weight: var(--header-brand-font-weight);
+  color: var(--header-brand-color);
+}

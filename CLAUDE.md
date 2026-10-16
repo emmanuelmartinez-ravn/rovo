@@ -51,6 +51,10 @@ Everything in `src/` lives in one of three folders. Layering runs one way — `s
 
 Imports: use relative paths inside a folder and the `@/` alias (`@/core/…`, `@/shared/…`, mapped to `src/` in `tsconfig.app.json` and `vite.config.ts`) to reach another top-level folder. Lint catches cross-feature imports only through `@/features/…`; a relative `../other-feature/…` slips past it, so don't write one.
 
+## Mockup
+
+`ROVO-MOCKUP.html` is the design reference. Open it at **http://127.0.0.1:5500/ROVO-MOCKUP.html**, served by the VS Code Live Server extension, never as a `file://` path or by parsing the file. It's a bundled page whose screens render in JavaScript inside `blob:` iframes, so only the served page shows them as designed. If that URL doesn't respond, ask the user to start Live Server rather than working around it. The Rovo panel header is the same on every screen, so one screen is enough for it.
+
 ## Architecture
 
 - **`manifest.json`** declares this as a side-panel extension: the `sidePanel` permission is granted, and `action` + `side_panel.default_path: index.html` mean clicking the toolbar icon opens the extension UI in Chrome's side panel, not a popup. Moving an entry point means updating its path here (and in `index.html` for the side panel).

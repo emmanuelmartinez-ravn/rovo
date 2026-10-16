@@ -3,7 +3,7 @@
   "name": "Rovo",
   "version": "1.0.0",
   "description": "A tool for QA engineers that automates form filling.",
-  "permissions": ["sidePanel"],
+  "permissions": ["sidePanel", "tabs"],
   "background": {
     "service_worker": "src/core/background/background.ts",
     "type": "module"

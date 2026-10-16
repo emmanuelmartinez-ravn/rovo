@@ -1,0 +1,17 @@
+.root {
+  /* Matches the md icon size so the row doesn't jump between spinner and text. */
+  --current-tab-domain-min-height: var(--size-icon-md);
+  --current-tab-domain-color: var(--color-text-meta);
+  --current-tab-domain-value-color: var(--color-text-strong);
+  --current-tab-domain-value-font: var(--font-code);
+
+  display: flex;
+  align-items: center;
+  min-height: var(--current-tab-domain-min-height);
+  color: var(--current-tab-domain-color);
+}
+
+.domain {
+  font-family: var(--current-tab-domain-value-font);
+  color: var(--current-tab-domain-value-color);
+}

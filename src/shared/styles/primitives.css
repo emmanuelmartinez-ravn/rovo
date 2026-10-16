@@ -1,0 +1,71 @@
+/*
+ * Tier 1 — primitives. Raw values, named on Tailwind's scales.
+ *
+ * The only file allowed to hold literal values. Values come from the
+ * "Rovo MVP — Now scope" mockup, so the names follow Tailwind's naming but the
+ * values are the mockup's (e.g. --color-gray-700 is the mockup's body text,
+ * not Tailwind's gray-700). Nothing outside semantic.css reads these.
+ */
+:root {
+  /* Color */
+  --color-white: #ffffff;
+  --color-gray-50: #f7f8fa;
+  --color-gray-100: #e9ecf1;
+  --color-gray-200: #e3e5e9;
+  --color-gray-300: #d5d8dd;
+  --color-gray-400: #c4c8cf;
+  --color-gray-600: #5a606b;
+  --color-gray-700: #4a505a;
+  --color-gray-950: #16181d;
+  --color-blue-50: #e8eeff;
+  --color-blue-700: #2453d6;
+  --color-blue-800: #1a3fa8;
+  --color-red-50: #fdeeec;
+  --color-red-700: #b42318;
+  --color-green-50: #e9f7ee;
+  --color-green-700: #17803d;
+  --color-orange-50: #fff4eb;
+  --color-orange-700: #b4500c;
+
+  /* Spacing and sizing (Tailwind's 4px scale; `-0-5` reads as 0.5) */
+  --spacing-px: 1px;
+  --spacing-0-5: 2px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+
+  /* Border width */
+  --border-1: 1px;
+  --border-2: 2px;
+  --border-3: 3px;
+
+  /* Radius */
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-sans: 'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  --text-xs: 13px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --leading-normal: 1.5;
+
+  /* Shadow */
+  --shadow-lg: 0 8px 24px rgb(22 24 29 / 0.14);
+  --shadow-xl: 0 16px 40px rgb(22 24 29 / 0.24);
+
+  /* Opacity and motion */
+  --opacity-50: 0.5;
+  --duration-1000: 1s;
+  --duration-2000: 2s;
+}

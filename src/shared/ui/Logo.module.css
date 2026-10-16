@@ -1,0 +1,18 @@
+.root {
+  --logo-size: var(--size-logo);
+  --logo-tile-color: var(--color-accent);
+  --logo-mark-color: var(--color-on-accent);
+
+  flex: none;
+  width: var(--logo-size);
+  height: var(--logo-size);
+}
+
+.tile {
+  fill: var(--logo-tile-color);
+}
+
+.mark {
+  fill: none;
+  stroke: var(--logo-mark-color);
+}

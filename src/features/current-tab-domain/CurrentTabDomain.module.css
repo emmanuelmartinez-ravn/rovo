@@ -1,17 +1,27 @@
 .root {
-  /* Matches the md icon size so the row doesn't jump between spinner and text. */
-  --current-tab-domain-min-height: var(--size-icon-md);
   --current-tab-domain-color: var(--color-text-meta);
-  --current-tab-domain-value-color: var(--color-text-strong);
+  --current-tab-domain-font-size: var(--font-size-code);
+  --current-tab-domain-message-font: var(--font-body);
   --current-tab-domain-value-font: var(--font-code);
 
   display: flex;
   align-items: center;
-  min-height: var(--current-tab-domain-min-height);
+  min-width: 0;
+  font-size: var(--current-tab-domain-font-size);
   color: var(--current-tab-domain-color);
+}
+
+.message,
+.domain {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message {
+  font-family: var(--current-tab-domain-message-font);
 }
 
 .domain {
   font-family: var(--current-tab-domain-value-font);
-  color: var(--current-tab-domain-value-color);
 }

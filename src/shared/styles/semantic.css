@@ -26,6 +26,7 @@
   --color-accent: var(--color-blue-700);
   --color-accent-hover: var(--color-blue-800);
   --color-accent-subtle: var(--color-blue-50);
+  --color-on-accent: var(--color-white);
 
   /* Status */
   --color-danger: var(--color-red-700);
@@ -47,6 +48,8 @@
   --size-hairline: var(--spacing-px);
   --size-icon-sm: var(--spacing-4);
   --size-icon-md: var(--spacing-6);
+  --size-logo: var(--spacing-5);
+  --size-header: var(--spacing-13);
 
   /* Border width */
   --border-width-thin: var(--border-1);

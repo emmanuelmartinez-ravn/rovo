@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+/*
+ * Tokens reverse-engineered from the "Rovo MVP — Now scope" mockup
+ * (its 10 Rovo panel screens — the staged browser chrome and the
+ * Northpass sample-page dressing around them were excluded). Light only:
+ * the mockup doesn't define a dark variant, so none is invented here.
+ */
+@theme {
+  --font-sans: 'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f7f8fa;
+
+  --color-text: #4a505a;
+  --color-text-strong: #16181d;
+  --color-text-meta: #5a606b;
+
+  --color-border: #e3e5e9;
+  --color-border-strong: #d5d8dd;
+  --color-border-dashed: #c4c8cf;
+
+  --color-accent: #2453d6;
+  --color-accent-hover: #1a3fa8;
+  --color-accent-subtle: #e8eeff;
+
+  --color-code-bg: #e9ecf1;
+
+  --color-danger: #b42318;
+  --color-danger-bg: #fdeeec;
+  --color-success: #17803d;
+  --color-success-bg: #e9f7ee;
+  --color-warning: #b4500c;
+  --color-warning-bg: #fff4eb;
+
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+
+  --shadow-menu: 0 8px 24px rgba(22, 24, 29, 0.14);
+  --shadow-modal: 0 16px 40px rgba(22, 24, 29, 0.24);
+}
+
+:root {
+  font: 14px/1.5 var(--font-sans);
+  color-scheme: light;
+  color: var(--color-text);
+  background: var(--color-bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--color-text-strong);
+}
+
+h1 {
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+h2 {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+p {
+  margin: 0;
+}
+
+code {
+  font-family: var(--font-mono);
+  display: inline-flex;
+  color: var(--color-text-strong);
+}
+
+code {
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  padding: 1px 4px;
+  background: var(--color-code-bg);
+}

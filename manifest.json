@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Rovo",
+  "version": "1.0.0",
+  "description": "A tool for QA engineers that automates form filling.",
+  "permissions": ["sidePanel"],
+  "background": {
+    "service_worker": "src/core/background/background.ts",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Rovo"
+  },
+  "side_panel": {
+    "default_path": "index.html"
+  }
+}

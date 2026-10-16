@@ -1,0 +1,119 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "react",
+    "typescript",
+    "oxc"
+  ],
+  "options": {
+    "typeAware": true
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": [
+      "warn",
+      {
+        "allowConstantExport": true
+      }
+    ],
+    "typescript/no-explicit-any": "error",
+    "typescript/no-non-null-assertion": "error",
+    "typescript/no-unsafe-assignment": "error",
+    "typescript/no-unsafe-argument": "error",
+    "typescript/no-unsafe-call": "error",
+    "typescript/no-unsafe-member-access": "error",
+    "typescript/no-unsafe-return": "error",
+    "typescript/no-unsafe-type-assertion": "error",
+    "typescript/no-unsafe-enum-comparison": "error",
+    "typescript/no-unsafe-unary-minus": "error",
+    "typescript/no-unsafe-declaration-merging": "error",
+    "typescript/no-unsafe-function-type": "error"
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/shared/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/core",
+                  "@/core/**",
+                  "../core",
+                  "../**/core",
+                  "../core/**",
+                  "../**/core/**",
+                  "@/features",
+                  "@/features/**",
+                  "../features",
+                  "../**/features",
+                  "../features/**",
+                  "../**/features/**"
+                ],
+                "message": "shared/ is the bottom layer: it must not import from core/ or features/."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/core/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/features",
+                  "@/features/**",
+                  "../features",
+                  "../**/features",
+                  "../features/**",
+                  "../**/features/**"
+                ],
+                "message": "core/ must not import from features/; only core/app (the composition root) may."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/core/app/**"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    },
+    {
+      "files": [
+        "src/features/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/features",
+                  "@/features/**"
+                ],
+                "message": "Features must not import each other. Move shared code to shared/ (generic) or core/ (Rovo domain/platform)."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

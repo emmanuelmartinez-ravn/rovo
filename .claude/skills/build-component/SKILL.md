@@ -19,7 +19,7 @@ The token tiers and their rules are in `CLAUDE.md`, "Design tokens": read that s
 
 ## 1. Read the brief and the reference
 
-Collect the brief (PRD in `prds/`, issue, or the user's message) and the reference. Write down every **assumption** you're making: anything the component depends on that neither of them states (data shape, copy, where it's mounted, how it behaves at narrow widths). Check each against the brief and mark it **confirmed** (cite where) or **unconfirmed**.
+Collect the brief (PRD in `prds/`, issue, or the user's message) and the reference. When the reference is the mockup, open it the way `CLAUDE.md`'s "Mockup" section (under "What this is") says. Write down every **assumption** you're making: anything the component depends on that neither of them states (data shape, copy, where it's mounted, how it behaves at narrow widths). Check each against the brief and mark it **confirmed** (cite where) or **unconfirmed**.
 
 Done when every assumption is listed with its mark. Unconfirmed assumptions go to the designer in step 5 with the gaps.
 

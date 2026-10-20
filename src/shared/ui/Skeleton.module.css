@@ -1,0 +1,49 @@
+.root {
+  --skeleton-color: var(--color-skeleton);
+  --skeleton-radius: var(--radius-code);
+  --skeleton-inset: var(--space-xs);
+  --skeleton-duration: var(--motion-pulse-duration);
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* One text line tall (1lh), with the bar inset so it sits like a line of text. */
+.line {
+  display: block;
+  height: 1lh;
+  padding-block: var(--skeleton-inset);
+  animation: pulse var(--skeleton-duration) ease-in-out infinite;
+}
+
+.line::before {
+  content: '';
+  display: block;
+  height: 100%;
+  border-radius: var(--skeleton-radius);
+  background: var(--skeleton-color);
+}
+
+.short {
+  width: 45%;
+}
+
+.medium {
+  width: 65%;
+}
+
+.long {
+  width: 85%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line {
+    animation: none;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: var(--opacity-muted);
+  }
+}

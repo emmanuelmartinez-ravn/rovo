@@ -8,6 +8,7 @@ import { Button } from '@/shared/ui/Button.tsx'
 import { ConfirmDialog } from '@/shared/ui/ConfirmDialog.tsx'
 import { Notice } from '@/shared/ui/Notice.tsx'
 import { Skeleton } from '@/shared/ui/Skeleton.tsx'
+import { EdgeCaseEditor } from './EdgeCaseEditor.tsx'
 import { EmptyScenarios } from './EmptyScenarios.tsx'
 import { ScenarioCard } from './ScenarioCard.tsx'
 import { ScenarioEditor } from './ScenarioEditor.tsx'
@@ -35,7 +36,11 @@ export function ScenariosPanel() {
 
 function DomainScenarios({ domain }: { domain: string }) {
   const scenarios = useScenarios(domain)
-  const [view, setView] = useState<{ kind: 'list' } | { kind: 'editor'; editing?: Scenario }>({ kind: 'list' })
+  const [view, setView] = useState<
+    | { kind: 'list' }
+    | { kind: 'editor'; editing?: Scenario }
+    | { kind: 'edgeCaseEditor'; scenario: Scenario }
+  >({ kind: 'list' })
   // Shown until the tester leaves the list.
   const [banner, setBanner] = useState<string | null>(null)
   const [problem, setProblem] = useState<string | null>(null)
@@ -51,6 +56,13 @@ function DomainScenarios({ domain }: { domain: string }) {
       }
       return next
     })
+  }
+
+  /** Opens the edge-case editor on a new edge case for `scenario`. */
+  function openEdgeCaseEditor(scenario: Scenario) {
+    setBanner(null)
+    setProblem(null)
+    setView({ kind: 'edgeCaseEditor', scenario })
   }
 
   /** Opens the editor on `editing`, or on a new scenario without it. */
@@ -88,6 +100,22 @@ function DomainScenarios({ domain }: { domain: string }) {
         onCancel={() => setView({ kind: 'list' })}
         onSaved={(name) => {
           setBanner(`Scenario “${name}” ${editing ? 'updated' : 'saved'}`)
+          setView({ kind: 'list' })
+        }}
+      />
+    )
+  }
+  if (view.kind === 'edgeCaseEditor') {
+    const { scenario } = view
+    return (
+      <EdgeCaseEditor
+        domain={domain}
+        scenario={scenario}
+        onCancel={() => setView({ kind: 'list' })}
+        onSaved={(name) => {
+          setBanner(`Edge case “${name}” saved`)
+          // Open the section so the tester sees what they just saved.
+          setExpanded((current) => new Set(current).add(scenario.id))
           setView({ kind: 'list' })
         }}
       />
@@ -139,6 +167,7 @@ function DomainScenarios({ domain }: { domain: string }) {
             onToggleEdgeCases={() => toggleEdgeCases(scenario.id)}
             onEdit={() => openEditor(scenario)}
             onDelete={() => setDeleting(scenario)}
+            onAddEdgeCase={() => openEdgeCaseEditor(scenario)}
           />
         ))}
       </ul>

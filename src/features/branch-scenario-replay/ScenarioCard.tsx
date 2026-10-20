@@ -1,5 +1,6 @@
 import type { Scenario } from '@/core/scenarios/scenario.ts'
 import { ActionMenu } from '@/shared/ui/ActionMenu.tsx'
+import { Button } from '@/shared/ui/Button.tsx'
 import { EdgeCaseSection } from './EdgeCaseSection.tsx'
 import styles from './ScenarioCard.module.css'
 
@@ -10,9 +11,17 @@ type ScenarioCardProps = {
   onToggleEdgeCases: () => void
   onEdit: () => void
   onDelete: () => void
+  onAddEdgeCase: () => void
 }
 
-export function ScenarioCard({ scenario, edgeCasesExpanded, onToggleEdgeCases, onEdit, onDelete }: ScenarioCardProps) {
+export function ScenarioCard({
+  scenario,
+  edgeCasesExpanded,
+  onToggleEdgeCases,
+  onEdit,
+  onDelete,
+  onAddEdgeCase,
+}: ScenarioCardProps) {
   const [first] = scenario.entries
   const count = scenario.entries.length
   const meta = `${first ? `${first.label}: ${first.value} · ` : ''}${count} ${count === 1 ? 'entry' : 'entries'}`
@@ -31,6 +40,11 @@ export function ScenarioCard({ scenario, edgeCasesExpanded, onToggleEdgeCases, o
             { label: 'Delete scenario', icon: 'trash', tone: 'danger', onSelect: onDelete },
           ]}
         />
+      </div>
+      <div className={styles.actions}>
+        <Button variant="secondary" size="md" icon="swap" className={styles.addEdgeCase} onClick={onAddEdgeCase}>
+          Add edge case
+        </Button>
       </div>
       {scenario.edgeCases.length > 0 && (
         <EdgeCaseSection scenario={scenario} expanded={edgeCasesExpanded} onToggle={onToggleEdgeCases} />

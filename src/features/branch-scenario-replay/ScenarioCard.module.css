@@ -49,3 +49,19 @@
   color: var(--card-meta-color);
   overflow-wrap: anywhere;
 }
+
+.actions {
+  --card-actions-gap: var(--space-sm);
+
+  display: flex;
+  gap: var(--card-actions-gap);
+}
+
+/* The mockup's card buttons pad 14px, and the swap icon wears the edge-case accent. */
+.addEdgeCase {
+  --button-padding-inline: var(--space-md-lg);
+}
+
+.addEdgeCase > svg {
+  color: var(--color-warning);
+}

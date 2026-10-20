@@ -1,0 +1,94 @@
+/* Layout (root, top, title, actions) comes from ScenarioEditor.module.css. */
+.subtitle {
+  font-size: var(--font-size-label);
+  color: var(--color-text);
+}
+
+/* 1. Entry to replace */
+.picker {
+  --picker-gap: var(--space-xs-sm);
+  --picker-legend-size: var(--font-size-label);
+  --picker-legend-weight: var(--font-weight-heading);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--picker-gap);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  margin-bottom: var(--picker-gap);
+  padding: 0;
+  font-size: var(--picker-legend-size);
+  font-weight: var(--picker-legend-weight);
+  color: var(--color-text-strong);
+}
+
+.option {
+  --option-height: var(--size-control-md);
+  --option-gap: var(--space-sm-md);
+  --option-padding: var(--space-md);
+  --option-radius: var(--radius-control);
+  --option-border-width: var(--border-width-thin);
+  --option-border-color: var(--color-border);
+  --option-background: var(--color-bg);
+  --option-label-size: var(--font-size-label);
+  --option-label-weight: var(--font-weight-heading);
+  --option-value-font: var(--font-code);
+  --option-value-size: var(--font-size-caption);
+  --option-value-color: var(--color-text);
+  --option-radio-size: var(--size-icon-sm);
+  --option-radio-accent: var(--color-warning);
+
+  display: flex;
+  align-items: center;
+  gap: var(--option-gap);
+  height: var(--option-height);
+  padding: 0 var(--option-padding);
+  border: var(--option-border-width) solid var(--option-border-color);
+  border-radius: var(--option-radius);
+  background: var(--option-background);
+  cursor: pointer;
+}
+
+.option:has(input:checked) {
+  --option-border-color: var(--color-warning);
+  --option-background: var(--color-warning-bg);
+}
+
+.option input {
+  flex: none;
+  width: var(--option-radio-size);
+  height: var(--option-radio-size);
+  margin: 0;
+  accent-color: var(--option-radio-accent);
+}
+
+.optionLabel {
+  flex: none;
+  font-size: var(--option-label-size);
+  font-weight: var(--option-label-weight);
+  color: var(--color-text-strong);
+}
+
+.optionValue {
+  min-width: 0;
+  margin-left: auto;
+  overflow: hidden;
+  font-family: var(--option-value-font);
+  font-size: var(--option-value-size);
+  color: var(--option-value-color);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 2. The edge-case value: mono, outlined in the edge-case accent */
+.value {
+  --textarea-border-width: var(--border-width-medium);
+  --textarea-border-color: var(--color-warning);
+  --textarea-font: var(--font-code);
+  --textarea-font-size: var(--font-size-code);
+}

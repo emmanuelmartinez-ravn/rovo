@@ -6,7 +6,7 @@
 
 /** Every primitive name defined in src/shared/styles/primitives.css. */
 const PRIMITIVE =
-  'color-(white|black|(gray|blue|red|green|orange)-\\d+)|spacing-[\\w-]+|border-\\d+|radius-(sm|md|lg|xl|full)|font-(sans|mono)|text-(xs|sm|base|lg)|font-weight-(normal|medium|semibold)|leading-\\w+|shadow-(lg|xl)|opacity-\\d+|duration-\\d+'
+  'color-(white|black|(gray|blue|red|green|orange)-\\d+)|spacing-[\\w-]+|border-\\d+|radius-(sm|md|lg|xl|full)|font-(sans|mono)|text-(xs|sm|base|lg|\\d+)|font-weight-(normal|medium|semibold)|leading-\\w+|shadow-(lg|xl)|opacity-\\d+|duration-\\d+'
 
 /** Literal colors, lengths and durations belong in primitives.css. */
 const noLiterals = {

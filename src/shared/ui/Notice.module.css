@@ -1,0 +1,14 @@
+/* No mockup reference: box metrics follow the scenario example block, colors the warning role. */
+.root {
+  --notice-padding-block: var(--space-md);
+  --notice-padding-inline: var(--space-md-lg);
+  --notice-radius: var(--radius-field);
+  --notice-color: var(--color-warning);
+  --notice-background: var(--color-warning-bg);
+
+  margin: 0;
+  padding: var(--notice-padding-block) var(--notice-padding-inline);
+  border-radius: var(--notice-radius);
+  color: var(--notice-color);
+  background: var(--notice-background);
+}

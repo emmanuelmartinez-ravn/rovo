@@ -5,5 +5,9 @@
 }
 
 .content {
+  --content-padding-block: var(--space-lg-xl);
+  --content-padding-inline: var(--space-lg);
+
   flex: 1;
+  padding: var(--content-padding-block) var(--content-padding-inline);
 }

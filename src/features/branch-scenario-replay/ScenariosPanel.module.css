@@ -1,0 +1,103 @@
+.root {
+  --scenarios-gap: var(--space-lg-xl);
+  --scenarios-heading-size: var(--font-size-heading-2);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--scenarios-gap);
+}
+
+.heading {
+  font-size: var(--scenarios-heading-size);
+}
+
+/* Empty-state card */
+.card {
+  --card-gap: var(--space-md-lg);
+  --card-padding-block: var(--space-xl);
+  --card-padding-inline: var(--space-lg-xl);
+  --card-border-width: var(--border-width-thin);
+  --card-border-color: var(--color-border-dashed);
+  --card-radius: var(--radius-card);
+  --card-background: var(--color-bg-subtle);
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--card-gap);
+  padding: var(--card-padding-block) var(--card-padding-inline);
+  border: var(--card-border-width) dashed var(--card-border-color);
+  border-radius: var(--card-radius);
+  background: var(--card-background);
+}
+
+.icon {
+  --icon-size: var(--size-icon-lg);
+  --icon-color: var(--color-accent);
+
+  flex: none;
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+.iconPath {
+  fill: none;
+  stroke: var(--icon-color);
+}
+
+.iconDot {
+  fill: var(--icon-color);
+}
+
+.text {
+  --text-gap: var(--space-sm-md);
+  --title-size: var(--font-size-heading-3);
+  --title-weight: var(--font-weight-heading);
+  --hint-color: var(--color-text);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--text-gap);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--title-size);
+  font-weight: var(--title-weight);
+  color: var(--color-text-strong);
+}
+
+.hint {
+  color: var(--hint-color);
+}
+
+/* The example scenario, or its skeleton while labels are read */
+.example {
+  --example-padding-block: var(--space-md);
+  --example-padding-inline: var(--space-md-lg);
+  --example-background: var(--color-bg);
+  --example-border-width: var(--border-width-thin);
+  --example-border-color: var(--color-border);
+  --example-radius: var(--radius-field);
+  --example-font: var(--font-code);
+  --example-font-size: var(--font-size-code);
+  --example-line-height: var(--line-height-code);
+  --example-color: var(--color-text-strong);
+
+  width: 100%;
+  margin: 0;
+  padding: var(--example-padding-block) var(--example-padding-inline);
+  border: var(--example-border-width) solid var(--example-border-color);
+  border-radius: var(--example-radius);
+  font-family: var(--example-font);
+  font-size: var(--example-font-size);
+  line-height: var(--example-line-height);
+  color: var(--example-color);
+  background: var(--example-background);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.notice {
+  width: 100%;
+}

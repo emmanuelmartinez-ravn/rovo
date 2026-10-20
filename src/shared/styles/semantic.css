@@ -11,6 +11,7 @@
   --color-bg: var(--color-white);
   --color-bg-subtle: var(--color-gray-50);
   --color-code-bg: var(--color-gray-100);
+  --color-skeleton: var(--color-gray-100);
 
   /* Text */
   --color-text: var(--color-gray-700);
@@ -39,15 +40,20 @@
   /* Space */
   --space-2xs: var(--spacing-0-5);
   --space-xs: var(--spacing-1);
+  --space-sm-md: var(--spacing-1-5);
   --space-sm: var(--spacing-2);
   --space-md: var(--spacing-3);
+  --space-md-lg: var(--spacing-3-5);
   --space-lg: var(--spacing-4);
+  --space-lg-xl: var(--spacing-5);
   --space-xl: var(--spacing-6);
 
   /* Size */
   --size-hairline: var(--spacing-px);
   --size-icon-sm: var(--spacing-4);
   --size-icon-md: var(--spacing-6);
+  --size-icon-lg: var(--spacing-8);
+  --size-control: var(--spacing-11);
   --size-logo: var(--spacing-5);
   --size-header: var(--spacing-13);
 
@@ -58,6 +64,9 @@
 
   /* Radius */
   --radius-code: var(--radius-sm);
+  --radius-field: var(--radius-md);
+  --radius-control: var(--radius-lg);
+  --radius-card: var(--radius-xl);
   --radius-round: var(--radius-full);
 
   /* Typography */
@@ -67,9 +76,11 @@
   --font-size-code: var(--text-xs);
   --font-size-heading-1: var(--text-lg);
   --font-size-heading-2: var(--text-base);
+  --font-size-heading-3: var(--text-15);
   --font-weight-body: var(--font-weight-normal);
   --font-weight-heading: var(--font-weight-semibold);
   --line-height-body: var(--leading-normal);
+  --line-height-code: var(--leading-relaxed);
 
   /* Elevation */
   --shadow-menu: var(--shadow-lg);

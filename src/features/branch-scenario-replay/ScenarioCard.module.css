@@ -58,6 +58,7 @@
 }
 
 /* The mockup's card buttons pad 14px, and the swap icon wears the edge-case accent. */
+.cardButton,
 .addEdgeCase {
   --button-padding-inline: var(--space-md-lg);
 }
@@ -68,4 +69,31 @@
 
 .edgeCaseMenu {
   --menu-trigger-pressed: var(--color-warning-pressed);
+}
+
+/* ▶ on an edge-case row: runs the scenario with that edge case. */
+.edgeCaseRun {
+  --edge-run-size: var(--size-control-sm);
+
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--edge-run-size);
+  height: var(--edge-run-size);
+  padding: 0;
+  border: var(--border-width-thin) solid var(--color-warning-border);
+  border-radius: var(--radius-control);
+  color: var(--color-warning);
+  background: var(--color-bg);
+  cursor: pointer;
+}
+
+.edgeCaseRun:hover {
+  background: var(--color-warning-bg);
+}
+
+.edgeCaseRun:disabled {
+  cursor: default;
+  opacity: var(--opacity-muted);
 }

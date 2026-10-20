@@ -1,0 +1,66 @@
+.root {
+  --status-size: var(--size-icon-status);
+  --status-success: var(--color-success);
+  --status-danger: var(--color-danger);
+  --status-mark: var(--color-on-status);
+  --status-ring: var(--color-accent-ring);
+  --status-arc: var(--color-accent);
+  --status-pending: var(--color-status-pending);
+  --status-spin-duration: var(--motion-spin-duration);
+
+  flex: none;
+  width: var(--status-size);
+  height: var(--status-size);
+}
+
+.large {
+  --status-size: var(--size-icon-status-lg);
+}
+
+.success {
+  fill: var(--status-success);
+}
+
+.danger {
+  fill: var(--status-danger);
+}
+
+.mark {
+  fill: none;
+  stroke: var(--status-mark);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ring {
+  fill: none;
+  stroke: var(--status-ring);
+}
+
+.arc {
+  fill: none;
+  stroke: var(--status-arc);
+  stroke-linecap: round;
+}
+
+.spinning {
+  transform-origin: center;
+  animation: spin var(--status-spin-duration) linear infinite;
+}
+
+.pending {
+  fill: none;
+  stroke: var(--status-pending);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinning {
+    animation: none;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

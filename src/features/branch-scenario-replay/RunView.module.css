@@ -1,0 +1,288 @@
+.root {
+  --run-padding-top: var(--space-lg);
+  --run-padding-inline: var(--space-lg);
+  --run-padding-bottom: var(--space-lg-xl);
+  --run-gap: var(--space-lg);
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--run-gap);
+  padding: var(--run-padding-top) var(--run-padding-inline) var(--run-padding-bottom);
+}
+
+/* The header box: running (blue), complete (green), stopped by a problem (red), stopped by the tester (gray). */
+.header {
+  --header-padding: var(--space-md-lg);
+  --header-radius: var(--radius-card);
+  --header-gap: var(--space-md);
+  --header-title-size: var(--font-size-heading-2);
+  --header-title-weight: var(--font-weight-heading);
+  --header-text-size: var(--font-size-label);
+
+  display: flex;
+  gap: var(--header-gap);
+  padding: var(--header-padding);
+  border-radius: var(--header-radius);
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--header-text-gap);
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--header-title-size);
+  font-weight: var(--header-title-weight);
+  color: var(--header-title-color);
+}
+
+.body {
+  font-size: var(--header-text-size);
+  line-height: var(--line-height-body);
+  color: var(--header-body-color);
+}
+
+.body strong {
+  font-family: var(--font-code);
+  font-weight: var(--font-weight-ui);
+}
+
+.running {
+  --header-gap: var(--space-sm-md);
+  --header-background: var(--color-accent-wash);
+  --header-title-color: var(--color-text-strong);
+  --header-body-color: var(--color-accent-ink);
+  --header-kicker-size: var(--font-size-caption);
+  --header-kicker-color: var(--color-accent-hover);
+  --header-count-font: var(--font-code);
+  --header-count-size: var(--font-size-code);
+
+  flex-direction: column;
+  background: var(--header-background);
+}
+
+.runningTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.runningTitle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.kicker {
+  font-size: var(--header-kicker-size);
+  font-weight: var(--header-title-weight);
+  color: var(--header-kicker-color);
+}
+
+.count {
+  flex: none;
+  font-family: var(--header-count-font);
+  font-size: var(--header-count-size);
+  color: var(--header-kicker-color);
+}
+
+.progress {
+  --progress-height: var(--size-progress);
+  --progress-radius: var(--radius-progress);
+  --progress-track: var(--color-accent-track);
+  --progress-fill: var(--color-accent);
+
+  width: 100%;
+  height: var(--progress-height);
+  border: 0;
+  border-radius: var(--progress-radius);
+  overflow: hidden;
+  appearance: none;
+  background: var(--progress-track);
+}
+
+.progress::-webkit-progress-bar {
+  background: var(--progress-track);
+}
+
+.progress::-webkit-progress-value {
+  background: var(--progress-fill);
+}
+
+.success {
+  --header-text-gap: var(--space-3xs);
+  --header-title-color: var(--color-success-title);
+  --header-body-color: var(--color-success-body);
+
+  background: var(--color-success-bg);
+}
+
+.danger {
+  --header-text-gap: var(--space-xs);
+  --header-title-color: var(--color-danger-title);
+  --header-body-color: var(--color-danger-body);
+
+  background: var(--color-danger-bg);
+}
+
+.neutral {
+  --header-text-gap: var(--space-xs);
+  --header-title-color: var(--color-text-strong);
+  --header-body-color: var(--color-text);
+
+  background: var(--color-bg-subtle);
+}
+
+/* The entries, one row each */
+.steps {
+  --steps-gap: var(--space-2xs);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--steps-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  --step-gap: var(--space-sm-md);
+  --step-padding-block: var(--space-row-block);
+  --step-padding-inline: var(--space-sm-md);
+  --step-radius: var(--radius-control);
+  --step-border-width: var(--border-width-thin);
+  --step-border-color: transparent;
+  --step-background: transparent;
+  --step-label-color: var(--color-text-strong);
+  --step-value-color: var(--color-text-value);
+  --step-icon-offset: var(--space-hairline);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--step-gap);
+  padding: var(--step-padding-block) var(--step-padding-inline);
+  border: var(--step-border-width) solid var(--step-border-color);
+  border-radius: var(--step-radius);
+  background: var(--step-background);
+}
+
+.step > svg {
+  margin-top: var(--step-icon-offset);
+}
+
+.stepActive {
+  --step-background: var(--color-accent-faint);
+}
+
+.stepPending {
+  --step-label-color: var(--color-text);
+  --step-value-color: var(--color-text-meta);
+}
+
+.stepSwapped {
+  --step-border-color: var(--color-warning-border);
+  --step-background: var(--color-warning-bg);
+}
+
+.stepFailed {
+  --step-border-color: var(--color-danger-border);
+  --step-background: var(--color-danger-bg);
+  --step-label-color: var(--color-danger-title);
+}
+
+.stepText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.stepTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.stepLabel {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-heading);
+  color: var(--step-label-color);
+}
+
+.stepValue {
+  font-family: var(--font-code);
+  font-size: var(--font-size-caption);
+  color: var(--step-value-color);
+  overflow-wrap: anywhere;
+}
+
+.stepNote {
+  font-size: var(--font-size-caption);
+  color: var(--color-text);
+}
+
+.stepNote code {
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+}
+
+.stepFailed .stepNote {
+  color: var(--color-danger-title);
+}
+
+.tag {
+  --tag-padding-block: var(--space-xs);
+  --tag-padding-inline: var(--space-tag-inline);
+
+  flex: none;
+  padding: var(--tag-padding-block) var(--tag-padding-inline);
+  border-radius: var(--radius-tag);
+  font-size: var(--font-size-tag);
+  font-weight: var(--font-weight-heading);
+  line-height: var(--line-height-tight);
+  color: var(--color-on-status);
+  background: var(--color-warning);
+}
+
+.hint {
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-body);
+  color: var(--color-text);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm-md);
+  margin-top: auto;
+}
+
+/* "Try another edge case" pads 16px, not the large button's 18px. */
+.compactButton {
+  --button-padding-inline: var(--space-lg);
+}
+
+/* "Back to scenarios": a text-only action. */
+.textAction {
+  height: var(--size-control);
+  padding: 0 var(--space-xs);
+  border: 0;
+  font-family: inherit;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-heading);
+  color: var(--color-accent);
+  background: none;
+  cursor: pointer;
+}
+
+.textAction:hover {
+  color: var(--color-accent-hover);
+}

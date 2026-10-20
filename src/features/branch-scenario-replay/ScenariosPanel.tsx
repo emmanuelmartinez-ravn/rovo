@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import type { EdgeCase, Scenario } from '@/core/scenarios/scenario.ts'
 import { deleteEdgeCase, deleteScenario } from '@/core/scenarios/scenarioStore.ts'
 import { useScenarios } from '@/core/scenarios/useScenarios.ts'
+import { useScenarioRun } from '@/core/run/useScenarioRun.ts'
 import { useActiveTabDomain } from '@/core/tabs/useActiveTabDomain.ts'
 import { Banner } from '@/shared/ui/Banner.tsx'
 import { Button } from '@/shared/ui/Button.tsx'
@@ -10,6 +11,7 @@ import { Notice } from '@/shared/ui/Notice.tsx'
 import { Skeleton } from '@/shared/ui/Skeleton.tsx'
 import { EdgeCaseEditor } from './EdgeCaseEditor.tsx'
 import { EmptyScenarios } from './EmptyScenarios.tsx'
+import { RunView } from './RunView.tsx'
 import { ScenarioCard } from './ScenarioCard.tsx'
 import { ScenarioEditor } from './ScenarioEditor.tsx'
 import styles from './ScenariosPanel.module.css'
@@ -43,7 +45,9 @@ function DomainScenarios({ domain }: { domain: string }) {
     | { kind: 'list' }
     | { kind: 'editor'; editing?: Scenario }
     | { kind: 'edgeCaseEditor'; scenario: Scenario; editing?: EdgeCase }
+    | { kind: 'run' }
   >({ kind: 'list' })
+  const run = useScenarioRun()
   // Shown until the tester leaves the list.
   const [banner, setBanner] = useState<string | null>(null)
   const [problem, setProblem] = useState<string | null>(null)
@@ -101,6 +105,36 @@ function DomainScenarios({ domain }: { domain: string }) {
     )
   }
 
+  function startRun(scenario: Scenario, edgeCase?: EdgeCase) {
+    setBanner(null)
+    setProblem(null)
+    run.start(scenario, edgeCase)
+    setView({ kind: 'run' })
+  }
+
+  /** The stored version of a run's scenario, which may have changed since it started. */
+  function latest(scenario: Scenario): Scenario {
+    return (scenarios.status === 'ready' && scenarios.scenarios.find((s) => s.id === scenario.id)) || scenario
+  }
+
+  if (view.kind === 'run' && run.state.status !== 'idle') {
+    const current = run.state
+    const ran = 'scenario' in current ? current : null
+    const leave = (next: () => void) => {
+      run.reset()
+      next()
+    }
+    return (
+      <RunView
+        state={current}
+        onStop={run.stop}
+        onRunAgain={() => ran && startRun(latest(ran.scenario), ran.edgeCase)}
+        onEditScenario={() => ran && leave(() => openEditor(latest(ran.scenario)))}
+        onAddEdgeCase={() => ran && leave(() => openEdgeCaseEditor(latest(ran.scenario)))}
+        onBack={() => leave(() => setView({ kind: 'list' }))}
+      />
+    )
+  }
   if (view.kind === 'editor') {
     const { editing } = view
     return (
@@ -178,12 +212,17 @@ function DomainScenarios({ domain }: { domain: string }) {
             onToggleEdgeCases={() => toggleEdgeCases(scenario.id)}
             onEdit={() => openEditor(scenario)}
             onDelete={() => setDeleting({ kind: 'scenario', scenario })}
+            onRun={() => startRun(scenario)}
+            onRunEdgeCase={(edgeCase) => startRun(scenario, edgeCase)}
             onAddEdgeCase={() => openEdgeCaseEditor(scenario)}
             onEditEdgeCase={(edgeCase) => openEdgeCaseEditor(scenario, edgeCase)}
             onDeleteEdgeCase={(edgeCase) => setDeleting({ kind: 'edgeCase', scenario, edgeCase })}
           />
         ))}
       </ul>
+      <p className={styles.footnote}>
+        A run fills the form open in this tab, top to bottom. Reload the page first to start from a fresh form.
+      </p>
       <ConfirmDialog
         open={deleting !== null}
         {...deleteCopy(deleting)}

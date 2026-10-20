@@ -27,6 +27,31 @@ export async function addScenario(domain: string, name: string, entries: Entry[]
   return scenario
 }
 
+/** The scenario being saved no longer exists, e.g. it was deleted in another window. */
+export class ScenarioNotFoundError extends Error {
+  constructor(domain: string, id: string) {
+    super(`No scenario ${id} on ${domain}`)
+    this.name = 'ScenarioNotFoundError'
+  }
+}
+
+/**
+ * Replaces a scenario's name and entries, keeping its id, creation time and
+ * place in the list. Rejects with `ScenarioNotFoundError` when it's gone.
+ */
+export async function updateScenario(domain: string, id: string, name: string, entries: Entry[]): Promise<Scenario> {
+  const scenarios = await loadScenarios(domain)
+  const existing = scenarios.find((scenario) => scenario.id === id)
+  if (!existing) {
+    throw new ScenarioNotFoundError(domain, id)
+  }
+  const updated: Scenario = { ...existing, name, entries }
+  await chrome.storage.local.set({
+    [storageKey(domain)]: scenarios.map((scenario) => (scenario.id === id ? updated : scenario)),
+  })
+  return updated
+}
+
 export async function deleteScenario(domain: string, id: string): Promise<void> {
   const remaining = (await loadScenarios(domain)).filter((scenario) => scenario.id !== id)
   const key = storageKey(domain)

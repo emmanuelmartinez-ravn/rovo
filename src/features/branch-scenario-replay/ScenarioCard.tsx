@@ -13,6 +13,7 @@ type ScenarioCardProps = {
   onDelete: () => void
   onAddEdgeCase: () => void
   onEditEdgeCase: (edgeCase: EdgeCase) => void
+  onDeleteEdgeCase: (edgeCase: EdgeCase) => void
 }
 
 export function ScenarioCard({
@@ -23,6 +24,7 @@ export function ScenarioCard({
   onDelete,
   onAddEdgeCase,
   onEditEdgeCase,
+  onDeleteEdgeCase,
 }: ScenarioCardProps) {
   const [first] = scenario.entries
   const count = scenario.entries.length
@@ -57,7 +59,10 @@ export function ScenarioCard({
             <ActionMenu
               className={styles.edgeCaseMenu}
               label={`More actions for ${edgeCase.name}`}
-              actions={[{ label: 'Edit edge case', icon: 'pencil', onSelect: () => onEditEdgeCase(edgeCase) }]}
+              actions={[
+                { label: 'Edit edge case', icon: 'pencil', onSelect: () => onEditEdgeCase(edgeCase) },
+                { label: 'Delete edge case', icon: 'trash', tone: 'danger', onSelect: () => onDeleteEdgeCase(edgeCase) },
+              ]}
             />
           )}
         />

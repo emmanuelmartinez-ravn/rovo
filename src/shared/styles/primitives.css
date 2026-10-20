@@ -32,7 +32,10 @@
   --color-green-700: #17803d;
   --color-green-800: #11632f;
   --color-orange-50: #fff4eb;
+  --color-orange-100: #ffe9d6;
+  --color-orange-200: #ffe4cc;
   --color-orange-700: #b4500c;
+  --color-orange-800: #8a3c08;
 
   /* Spacing and sizing (Tailwind's 4px scale; `-0-5` reads as 0.5) */
   --spacing-px: 1px;
@@ -55,6 +58,7 @@
   --spacing-10: 40px;
   --spacing-11: 44px;
   --spacing-13: 52px;
+  --spacing-16: 64px;
   --spacing-42: 168px;
   --spacing-45: 180px;
 
@@ -93,6 +97,7 @@
 
   /* Opacity and motion */
   --opacity-50: 0.5;
+  --duration-150: 150ms;
   --duration-1000: 1s;
   --duration-2000: 2s;
 }

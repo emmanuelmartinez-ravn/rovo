@@ -1,0 +1,106 @@
+/*
+ * A textarea laid over a mirror of its own lines. The mirror sizes the box
+ * (so it grows with content), draws the line numbers beside each line, wrapped
+ * or not, and highlights the invalid line. Its text is invisible; the
+ * textarea on top shows the text and takes the input.
+ */
+.root {
+  --editor-min-height: var(--size-editor-min);
+  --editor-background: var(--color-bg-editor);
+  --editor-border-width: var(--border-width-thin);
+  --editor-border-color: var(--color-border-field);
+  --editor-radius: var(--radius-field);
+  --editor-focus-width: var(--border-width-medium);
+  --editor-focus-color: var(--color-accent);
+  --editor-focus-offset: var(--space-2xs);
+  --editor-padding-top: var(--space-sm);
+  --editor-text-padding-inline: var(--space-sm-md);
+  --editor-line-height: var(--size-line-code);
+  --editor-font: var(--font-code);
+  --editor-font-size: var(--font-size-code);
+  --editor-color: var(--color-text-strong);
+  --editor-gutter-width: var(--size-editor-gutter);
+  --editor-gutter-padding: var(--space-sm);
+  --editor-gutter-font-size: var(--font-size-caption);
+  --editor-gutter-color: var(--color-text-meta);
+  --editor-gutter-border-color: var(--color-border);
+  --editor-highlight: var(--color-danger-highlight);
+
+  position: relative;
+  min-height: var(--editor-min-height);
+  border: var(--editor-border-width) solid var(--editor-border-color);
+  border-radius: var(--editor-radius);
+  background: var(--editor-background);
+  overflow: hidden;
+}
+
+.root:focus-within {
+  outline: var(--editor-focus-width) solid var(--editor-focus-color);
+  outline-offset: var(--editor-focus-offset);
+}
+
+.invalid {
+  --editor-border-width: var(--border-width-medium);
+  --editor-border-color: var(--color-danger);
+}
+
+/* The gutter's divider runs the full height, including below the last line. */
+.root::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--editor-gutter-width);
+  border-right: var(--editor-border-width) solid var(--editor-gutter-border-color);
+}
+
+.mirror {
+  padding-top: var(--editor-padding-top);
+}
+
+.line {
+  display: grid;
+  grid-template-columns: var(--editor-gutter-width) minmax(0, 1fr);
+  min-height: var(--editor-line-height);
+}
+
+.lineInvalid {
+  background: var(--editor-highlight);
+}
+
+.number {
+  padding-right: var(--editor-gutter-padding);
+  font-family: var(--editor-font);
+  font-size: var(--editor-gutter-font-size);
+  line-height: var(--editor-line-height);
+  text-align: right;
+  color: var(--editor-gutter-color);
+}
+
+.text,
+.input {
+  padding-inline: var(--editor-text-padding-inline);
+  font-family: var(--editor-font);
+  font-size: var(--editor-font-size);
+  line-height: var(--editor-line-height);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.text {
+  color: transparent;
+}
+
+.input {
+  position: absolute;
+  inset: 0 0 0 var(--editor-gutter-width);
+  width: auto;
+  margin: 0;
+  padding-top: var(--editor-padding-top);
+  padding-bottom: 0;
+  border: 0;
+  resize: none;
+  overflow: hidden;
+  color: var(--editor-color);
+  background: transparent;
+  outline: none;
+}

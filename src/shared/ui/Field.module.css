@@ -1,0 +1,50 @@
+/* Shared by TextField and LineEditor: the label/help/control/error stack. */
+.root {
+  --field-gap: var(--space-xs-sm);
+  --field-label-size: var(--font-size-label);
+  --field-label-weight: var(--font-weight-heading);
+  --field-help-color: var(--color-text);
+  --field-help-code-size: var(--font-size-caption);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--field-gap);
+}
+
+.label {
+  font-size: var(--field-label-size);
+  font-weight: var(--field-label-weight);
+  color: var(--color-text-strong);
+}
+
+.help {
+  font-size: var(--field-label-size);
+  line-height: var(--line-height-body);
+  color: var(--field-help-color);
+}
+
+.help code {
+  font-size: var(--field-help-code-size);
+}
+
+.input {
+  --input-height: var(--size-field);
+  --input-padding-inline: var(--space-md);
+  --input-border-width: var(--border-width-thin);
+  --input-border-color: var(--color-border-field);
+  --input-radius: var(--radius-field);
+
+  height: var(--input-height);
+  padding: 0 var(--input-padding-inline);
+  border: var(--input-border-width) solid var(--input-border-color);
+  border-radius: var(--input-radius);
+  font-family: inherit;
+  font-size: var(--font-size-body);
+  color: var(--color-text-strong);
+  background: var(--color-bg);
+}
+
+.input[aria-invalid='true'] {
+  --input-border-width: var(--border-width-medium);
+  --input-border-color: var(--color-danger);
+}

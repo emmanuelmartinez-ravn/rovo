@@ -1,9 +1,0 @@
-.root {
-  --plus-icon-size: var(--size-icon-sm);
-
-  flex: none;
-  width: var(--plus-icon-size);
-  height: var(--plus-icon-size);
-  fill: none;
-  stroke: currentcolor;
-}

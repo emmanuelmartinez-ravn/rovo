@@ -34,12 +34,14 @@ body {
 
 h1,
 h2,
+h3,
 p {
   margin: 0;
 }
 
 h1,
-h2 {
+h2,
+h3 {
   font-weight: var(--font-weight-heading);
   color: var(--color-text-strong);
 }
@@ -50,6 +52,10 @@ h1 {
 
 h2 {
   font-size: var(--font-size-heading-2);
+}
+
+h3 {
+  font-size: var(--font-size-heading-3);
 }
 
 code {

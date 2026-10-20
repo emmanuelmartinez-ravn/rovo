@@ -9,21 +9,28 @@
 :root {
   /* Color */
   --color-white: #ffffff;
+  --color-gray-25: #fbfbfc;
   --color-gray-50: #f7f8fa;
+  --color-gray-75: #eef1f5;
   --color-gray-100: #e9ecf1;
   --color-gray-200: #e3e5e9;
   --color-gray-300: #d5d8dd;
   --color-gray-400: #c4c8cf;
+  --color-gray-500: #7a808a;
   --color-gray-600: #5a606b;
   --color-gray-700: #4a505a;
+  --color-gray-800: #3b4048;
   --color-gray-950: #16181d;
+  --color-gray-950-a50: rgb(22 24 29 / 0.5);
   --color-blue-50: #e8eeff;
   --color-blue-700: #2453d6;
   --color-blue-800: #1a3fa8;
   --color-red-50: #fdeeec;
+  --color-red-100: #fde8e6;
   --color-red-700: #b42318;
   --color-green-50: #e9f7ee;
   --color-green-700: #17803d;
+  --color-green-800: #11632f;
   --color-orange-50: #fff4eb;
   --color-orange-700: #b4500c;
 
@@ -33,14 +40,23 @@
   --spacing-1: 4px;
   --spacing-1-5: 6px;
   --spacing-2: 8px;
+  --spacing-2-5: 10px;
   --spacing-3: 12px;
   --spacing-3-5: 14px;
   --spacing-4: 16px;
+  --spacing-4-5: 18px;
   --spacing-5: 20px;
+  --spacing-5-5: 22px;
   --spacing-6: 24px;
+  --spacing-7: 28px;
   --spacing-8: 32px;
+  --spacing-8-5: 34px;
+  --spacing-9: 36px;
+  --spacing-10: 40px;
   --spacing-11: 44px;
   --spacing-13: 52px;
+  --spacing-42: 168px;
+  --spacing-45: 180px;
 
   /* Border width */
   --border-1: 1px;
@@ -52,11 +68,13 @@
   --radius-md: 6px;
   --radius-lg: 8px;
   --radius-xl: 10px;
+  --radius-2xl: 12px;
   --radius-full: 9999px;
 
   /* Typography */
   --font-sans: 'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  --text-12: 12px;
   --text-xs: 13px;
   --text-sm: 14px;
   --text-15: 15px;
@@ -66,6 +84,7 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --leading-normal: 1.5;
+  --leading-155: 1.55;
   --leading-relaxed: 1.7;
 
   /* Shadow */

@@ -1,0 +1,40 @@
+.root {
+  --banner-gap: var(--space-sm-md);
+  --banner-padding-block: var(--space-sm-md);
+  --banner-padding-inline: var(--space-md);
+  --banner-radius: var(--radius-control);
+  --banner-background: var(--color-success-bg);
+  --banner-color: var(--color-success-strong);
+  --banner-font-size: var(--font-size-label);
+  --banner-font-weight: var(--font-weight-ui);
+  --banner-icon-size: var(--size-icon-sm);
+  --banner-icon-color: var(--color-success);
+  --banner-icon-mark: var(--color-on-status);
+
+  display: flex;
+  align-items: center;
+  gap: var(--banner-gap);
+  padding: var(--banner-padding-block) var(--banner-padding-inline);
+  border-radius: var(--banner-radius);
+  font-size: var(--banner-font-size);
+  font-weight: var(--banner-font-weight);
+  color: var(--banner-color);
+  background: var(--banner-background);
+}
+
+.icon {
+  flex: none;
+  width: var(--banner-icon-size);
+  height: var(--banner-icon-size);
+}
+
+.iconDisc {
+  fill: var(--banner-icon-color);
+}
+
+.iconMark {
+  fill: none;
+  stroke: var(--banner-icon-mark);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

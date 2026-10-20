@@ -1,61 +1,146 @@
-import { useFormLabels } from '@/core/tabs/useFormLabels.ts'
+import { useState, type ReactNode } from 'react'
+import type { Scenario } from '@/core/scenarios/scenario.ts'
+import { deleteScenario } from '@/core/scenarios/scenarioStore.ts'
+import { useScenarios } from '@/core/scenarios/useScenarios.ts'
+import { useActiveTabDomain } from '@/core/tabs/useActiveTabDomain.ts'
+import { Banner } from '@/shared/ui/Banner.tsx'
 import { Button } from '@/shared/ui/Button.tsx'
+import { ConfirmDialog } from '@/shared/ui/ConfirmDialog.tsx'
 import { Notice } from '@/shared/ui/Notice.tsx'
-import { PlusIcon } from '@/shared/ui/PlusIcon.tsx'
 import { Skeleton } from '@/shared/ui/Skeleton.tsx'
-import { BranchIcon } from './BranchIcon.tsx'
+import { EmptyScenarios } from './EmptyScenarios.tsx'
+import { ScenarioCard } from './ScenarioCard.tsx'
+import { ScenarioEditor } from './ScenarioEditor.tsx'
 import styles from './ScenariosPanel.module.css'
 
+/** Scenarios are saved per domain, so the panel follows the active tab's. */
 export function ScenariosPanel() {
+  const tab = useActiveTabDomain()
+
+  if (tab.status === 'loading') {
+    return <LoadingView />
+  }
+  if (tab.status === 'error' || tab.domain === null) {
+    // Nothing to save scenarios against: the card explains why.
+    return (
+      <section className={styles.emptyView}>
+        <Heading />
+        <EmptyScenarios />
+      </section>
+    )
+  }
+  // Keyed by domain: switching sites starts over on the list, banner cleared.
+  return <DomainScenarios key={tab.domain} domain={tab.domain} />
+}
+
+function DomainScenarios({ domain }: { domain: string }) {
+  const scenarios = useScenarios(domain)
+  const [view, setView] = useState<'list' | 'editor'>('list')
+  // Shown until the tester leaves the list.
+  const [banner, setBanner] = useState<string | null>(null)
+  const [problem, setProblem] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState<Scenario | null>(null)
+
+  function openEditor() {
+    setBanner(null)
+    setProblem(null)
+    setView('editor')
+  }
+
+  function confirmDelete() {
+    if (!deleting) {
+      return
+    }
+    const { id, name } = deleting
+    setDeleting(null)
+    deleteScenario(domain, id).then(
+      () => {
+        setProblem(null)
+        setBanner(`Scenario “${name}” deleted`)
+      },
+      (error: unknown) => {
+        console.error('Failed to delete scenario', error)
+        setBanner(null)
+        setProblem(`Couldn't delete “${name}”. Try again.`)
+      },
+    )
+  }
+
+  if (view === 'editor') {
+    return (
+      <ScenarioEditor
+        domain={domain}
+        onCancel={() => setView('list')}
+        onSaved={(name) => {
+          setBanner(`Scenario “${name}” saved`)
+          setView('list')
+        }}
+      />
+    )
+  }
+  if (scenarios.status === 'loading') {
+    return <LoadingView />
+  }
+
+  const messages: ReactNode = (
+    <>
+      {banner && <Banner>{banner}</Banner>}
+      {problem && <Notice>{problem}</Notice>}
+    </>
+  )
+
+  if (scenarios.status === 'error') {
+    return (
+      <section className={styles.listView}>
+        <Heading />
+        <Notice>Couldn't load the saved scenarios.</Notice>
+      </section>
+    )
+  }
+  if (scenarios.scenarios.length === 0) {
+    return (
+      <section className={styles.emptyView}>
+        {messages}
+        <Heading />
+        <EmptyScenarios onNew={openEditor} />
+      </section>
+    )
+  }
   return (
-    <section className={styles.root}>
-      <h2 className={styles.heading}>Scenarios for this form</h2>
-      <EmptyScenarios />
+    <section className={styles.listView}>
+      {messages}
+      <div className={styles.listHeader}>
+        <Heading />
+        <Button variant="secondary" size="sm" icon="plus" onClick={openEditor}>
+          New
+        </Button>
+      </div>
+      <ul className={styles.list}>
+        {scenarios.scenarios.map((scenario) => (
+          <ScenarioCard key={scenario.id} scenario={scenario} onDelete={() => setDeleting(scenario)} />
+        ))}
+      </ul>
+      <ConfirmDialog
+        open={deleting !== null}
+        title={`Delete “${deleting?.name ?? ''}”?`}
+        body="The scenario will be permanently deleted. This can’t be undone."
+        confirmLabel="Delete scenario"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleting(null)}
+      />
     </section>
   )
 }
 
-function EmptyScenarios() {
-  return (
-    <div className={styles.card}>
-      <BranchIcon />
-      <div className={styles.text}>
-        <h3 className={styles.title}>No scenarios for this form yet</h3>
-        <p className={styles.hint}>
-          Write the path through the form as <code>Label: value</code> lines, in the order you'd fill
-          it. Branch choices are lines too.
-        </p>
-      </div>
-      <ExampleScenario />
-      <Button icon={<PlusIcon />}>New scenario</Button>
-    </div>
-  )
+function Heading() {
+  return <h2 className={styles.heading}>Scenarios for this form</h2>
 }
 
-/** An example built from the current page's own field labels. */
-function ExampleScenario() {
-  const state = useFormLabels()
-
-  if (state.status === 'loading') {
-    return (
-      <div className={styles.example}>
-        <Skeleton label="Reading the form's labels" />
-      </div>
-    )
-  }
-  if (state.status === 'unreadable') {
-    return (
-      <div className={styles.notice}>
-        <Notice>Rovo can't read this page.</Notice>
-      </div>
-    )
-  }
-  if (state.labels.length === 0) {
-    return (
-      <div className={styles.notice}>
-        <Notice>Labels for this form couldn't be detected.</Notice>
-      </div>
-    )
-  }
-  return <pre className={styles.example}>{state.labels.map((label) => `${label}: ...`).join('\n')}</pre>
+function LoadingView() {
+  return (
+    <section className={styles.listView}>
+      <Heading />
+      <Skeleton label="Loading scenarios" />
+    </section>
+  )
 }

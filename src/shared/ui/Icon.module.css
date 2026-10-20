@@ -1,0 +1,28 @@
+.root {
+  --icon-size: var(--size-icon-sm);
+
+  flex: none;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.xs {
+  --icon-size: var(--size-icon-xs);
+}
+
+.menu {
+  --icon-size: var(--size-icon-menu);
+}
+
+.dialog {
+  --icon-size: var(--size-icon-dialog);
+}
+
+.filled {
+  fill: currentcolor;
+  stroke: none;
+}

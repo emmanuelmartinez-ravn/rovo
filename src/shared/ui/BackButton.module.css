@@ -1,0 +1,25 @@
+/* Styled as the mockup's link; it's a button because it changes the panel's view, not a URL. */
+.root {
+  --back-height: var(--size-control-xs);
+  --back-gap: var(--space-xs);
+  --back-font-size: var(--font-size-label);
+  --back-color: var(--color-accent);
+  --back-color-hover: var(--color-accent-hover);
+
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: var(--back-gap);
+  height: var(--back-height);
+  padding: 0;
+  border: 0;
+  font-family: inherit;
+  font-size: var(--back-font-size);
+  color: var(--back-color);
+  background: none;
+  cursor: pointer;
+}
+
+.root:hover {
+  color: var(--back-color-hover);
+}

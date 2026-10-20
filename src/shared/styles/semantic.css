@@ -10,6 +10,9 @@
   /* Surface */
   --color-bg: var(--color-white);
   --color-bg-subtle: var(--color-gray-50);
+  --color-bg-editor: var(--color-gray-25);
+  --color-bg-pressed: var(--color-gray-75);
+  --color-overlay: var(--color-gray-950-a50);
   --color-code-bg: var(--color-gray-100);
   --color-skeleton: var(--color-gray-100);
 
@@ -17,43 +20,63 @@
   --color-text: var(--color-gray-700);
   --color-text-strong: var(--color-gray-950);
   --color-text-meta: var(--color-gray-600);
+  --color-text-emphasis: var(--color-gray-800);
 
   /* Border */
   --color-border: var(--color-gray-200);
   --color-border-strong: var(--color-gray-300);
   --color-border-dashed: var(--color-gray-400);
+  --color-border-field: var(--color-gray-500);
 
   /* Accent */
   --color-accent: var(--color-blue-700);
   --color-accent-hover: var(--color-blue-800);
   --color-accent-subtle: var(--color-blue-50);
   --color-on-accent: var(--color-white);
+  --color-on-status: var(--color-white);
 
   /* Status */
   --color-danger: var(--color-red-700);
   --color-danger-bg: var(--color-red-50);
+  --color-danger-highlight: var(--color-red-100);
   --color-success: var(--color-green-700);
   --color-success-bg: var(--color-green-50);
+  --color-success-strong: var(--color-green-800);
   --color-warning: var(--color-orange-700);
   --color-warning-bg: var(--color-orange-50);
 
   /* Space */
   --space-2xs: var(--spacing-0-5);
   --space-xs: var(--spacing-1);
-  --space-sm-md: var(--spacing-1-5);
+  --space-xs-sm: var(--spacing-1-5);
   --space-sm: var(--spacing-2);
+  --space-sm-md: var(--spacing-2-5);
   --space-md: var(--spacing-3);
   --space-md-lg: var(--spacing-3-5);
   --space-lg: var(--spacing-4);
+  --space-section: var(--spacing-4-5);
+  --space-control-inline: var(--spacing-4-5);
   --space-lg-xl: var(--spacing-5);
   --space-xl: var(--spacing-6);
 
   /* Size */
   --size-hairline: var(--spacing-px);
   --size-icon-sm: var(--spacing-4);
+  --size-icon-xs: var(--spacing-3-5);
+  --size-icon-menu: var(--spacing-4-5);
+  --size-icon-dialog: var(--spacing-5);
   --size-icon-md: var(--spacing-6);
   --size-icon-lg: var(--spacing-8);
   --size-control: var(--spacing-11);
+  --size-control-md: var(--spacing-10);
+  --size-control-sm: var(--spacing-9);
+  --size-control-xs: var(--spacing-7);
+  --size-field: var(--spacing-10);
+  --size-badge-lg: var(--spacing-10);
+  --size-line-code: var(--spacing-5-5);
+  --size-editor-gutter: var(--spacing-8-5);
+  --size-editor-min: var(--spacing-42);
+  --size-menu: var(--spacing-45);
   --size-logo: var(--spacing-5);
   --size-header: var(--spacing-13);
 
@@ -67,6 +90,9 @@
   --radius-field: var(--radius-md);
   --radius-control: var(--radius-lg);
   --radius-card: var(--radius-xl);
+  --radius-menu: var(--radius-xl);
+  --radius-menu-item: var(--radius-md);
+  --radius-dialog: var(--radius-2xl);
   --radius-round: var(--radius-full);
 
   /* Typography */
@@ -74,12 +100,17 @@
   --font-code: var(--font-mono);
   --font-size-body: var(--text-sm);
   --font-size-code: var(--text-xs);
+  --font-size-label: var(--text-xs);
+  --font-size-body-sm: var(--text-xs);
+  --font-size-caption: var(--text-12);
   --font-size-heading-1: var(--text-lg);
   --font-size-heading-2: var(--text-base);
   --font-size-heading-3: var(--text-15);
   --font-weight-body: var(--font-weight-normal);
+  --font-weight-ui: var(--font-weight-medium);
   --font-weight-heading: var(--font-weight-semibold);
   --line-height-body: var(--leading-normal);
+  --line-height-dialog: var(--leading-155);
   --line-height-code: var(--leading-relaxed);
 
   /* Elevation */

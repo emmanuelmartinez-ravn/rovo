@@ -1,4 +1,4 @@
-import styles from './ScenariosPanel.module.css'
+import styles from './EmptyScenarios.module.css'
 
 /** The branching-path mark from the empty state. Decorative. */
 export function BranchIcon() {

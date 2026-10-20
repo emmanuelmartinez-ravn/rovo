@@ -1,0 +1,33 @@
+.root {
+  --editor-view-padding-top: var(--space-lg);
+  --editor-view-padding-inline: var(--space-lg);
+  --editor-view-padding-bottom: var(--space-lg-xl);
+  --editor-view-gap: var(--space-section);
+  --editor-top-gap: var(--space-xs);
+  --editor-title-size: var(--font-size-heading-1);
+  --editor-title-weight: var(--font-weight-heading);
+  --editor-actions-gap: var(--space-sm-md);
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--editor-view-gap);
+  padding: var(--editor-view-padding-top) var(--editor-view-padding-inline) var(--editor-view-padding-bottom);
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--editor-top-gap);
+}
+
+.title {
+  font-size: var(--editor-title-size);
+  font-weight: var(--editor-title-weight);
+}
+
+.actions {
+  display: flex;
+  gap: var(--editor-actions-gap);
+  margin-top: auto;
+}

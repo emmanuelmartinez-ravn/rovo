@@ -4,10 +4,9 @@
   flex-direction: column;
 }
 
+/* Each view pads itself: the mockup's screens differ (empty state vs list vs editor). */
 .content {
-  --content-padding-block: var(--space-lg-xl);
-  --content-padding-inline: var(--space-lg);
-
+  display: flex;
   flex: 1;
-  padding: var(--content-padding-block) var(--content-padding-inline);
+  flex-direction: column;
 }

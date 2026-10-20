@@ -1,0 +1,85 @@
+.root {
+  --menu-trigger-size: var(--size-control-sm);
+  --menu-trigger-radius: var(--radius-control);
+  --menu-trigger-color: var(--color-text);
+  --menu-trigger-pressed: var(--color-bg-pressed);
+  --menu-offset: var(--space-xs);
+  --menu-width: var(--size-menu);
+  --menu-padding: var(--space-xs-sm);
+  --menu-gap: var(--space-2xs);
+  --menu-background: var(--color-bg);
+  --menu-border-width: var(--border-width-thin);
+  --menu-border-color: var(--color-border-strong);
+  --menu-radius: var(--radius-menu);
+  --menu-shadow: var(--shadow-menu);
+  --menu-item-height: var(--size-control-md);
+  --menu-item-gap: var(--space-sm-md);
+  --menu-item-padding: var(--space-sm-md);
+  --menu-item-radius: var(--radius-menu-item);
+  --menu-item-font-size: var(--font-size-label);
+  --menu-item-font-weight: var(--font-weight-ui);
+  --menu-item-color: var(--color-text-strong);
+  --menu-item-hover: var(--color-bg-subtle);
+
+  position: relative;
+  flex: none;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--menu-trigger-size);
+  height: var(--menu-trigger-size);
+  padding: 0;
+  border: 0;
+  border-radius: var(--menu-trigger-radius);
+  color: var(--menu-trigger-color);
+  background: transparent;
+  cursor: pointer;
+}
+
+.trigger[aria-expanded='true'] {
+  background: var(--menu-trigger-pressed);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + var(--menu-offset));
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--menu-gap);
+  width: var(--menu-width);
+  padding: var(--menu-padding);
+  border: var(--menu-border-width) solid var(--menu-border-color);
+  border-radius: var(--menu-radius);
+  background: var(--menu-background);
+  box-shadow: var(--menu-shadow);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--menu-item-gap);
+  height: var(--menu-item-height);
+  padding: 0 var(--menu-item-padding);
+  border: 0;
+  border-radius: var(--menu-item-radius);
+  font-family: inherit;
+  font-size: var(--menu-item-font-size);
+  font-weight: var(--menu-item-font-weight);
+  text-align: left;
+  color: var(--menu-item-color);
+  background: transparent;
+  cursor: pointer;
+}
+
+.item:hover {
+  background: var(--menu-item-hover);
+}
+
+.danger {
+  --menu-item-color: var(--color-danger);
+}

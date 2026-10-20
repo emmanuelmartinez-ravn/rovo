@@ -1,0 +1,81 @@
+.root {
+  --dialog-inset: var(--space-lg-xl);
+  --dialog-padding: var(--space-lg-xl);
+  --dialog-gap: var(--space-lg);
+  --dialog-radius: var(--radius-dialog);
+  --dialog-background: var(--color-bg);
+  --dialog-shadow: var(--shadow-modal);
+  --dialog-backdrop: var(--color-overlay);
+  --dialog-header-gap: var(--space-md-lg);
+  --dialog-text-gap: var(--space-xs-sm);
+  --dialog-badge-size: var(--size-badge-lg);
+  --dialog-badge-background: var(--color-danger-bg);
+  --dialog-badge-color: var(--color-danger);
+  --dialog-title-size: var(--font-size-heading-2);
+  --dialog-title-weight: var(--font-weight-heading);
+  --dialog-body-size: var(--font-size-body-sm);
+  --dialog-body-line-height: var(--line-height-dialog);
+  --dialog-body-color: var(--color-text-emphasis);
+  --dialog-actions-gap: var(--space-sm);
+
+  width: calc(100% - 2 * var(--dialog-inset));
+  max-width: none;
+  padding: var(--dialog-padding);
+  border: 0;
+  border-radius: var(--dialog-radius);
+  color: var(--color-text-strong);
+  background: var(--dialog-background);
+  box-shadow: var(--dialog-shadow);
+}
+
+.root[open] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dialog-gap);
+}
+
+.root::backdrop {
+  background: var(--dialog-backdrop);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dialog-header-gap);
+}
+
+.badge {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--dialog-badge-size);
+  height: var(--dialog-badge-size);
+  border-radius: var(--radius-round);
+  color: var(--dialog-badge-color);
+  background: var(--dialog-badge-background);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dialog-text-gap);
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--dialog-title-size);
+  font-weight: var(--dialog-title-weight);
+}
+
+.body {
+  font-size: var(--dialog-body-size);
+  line-height: var(--dialog-body-line-height);
+  color: var(--dialog-body-color);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--dialog-actions-gap);
+}

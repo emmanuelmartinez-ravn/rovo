@@ -1,20 +1,23 @@
 .root {
   --button-height: var(--size-control);
-  --button-padding-inline: var(--space-lg);
+  --button-padding-inline: var(--space-control-inline);
   --button-gap: var(--space-sm);
   --button-radius: var(--radius-control);
+  --button-font-size: var(--font-size-body);
+  --button-font-weight: var(--font-weight-heading);
+  --button-border-width: var(--border-width-thin);
+  --button-border-color: transparent;
   --button-background: var(--color-accent);
   --button-background-hover: var(--color-accent-hover);
   --button-color: var(--color-on-accent);
-  --button-font-size: var(--font-size-body);
-  --button-font-weight: var(--font-weight-heading);
 
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: var(--button-gap);
   height: var(--button-height);
   padding: 0 var(--button-padding-inline);
-  border: 0;
+  border: var(--button-border-width) solid var(--button-border-color);
   border-radius: var(--button-radius);
   font-family: inherit;
   font-size: var(--button-font-size);
@@ -26,4 +29,37 @@
 
 .root:hover {
   background: var(--button-background-hover);
+}
+
+.root:disabled {
+  cursor: default;
+  opacity: var(--opacity-muted);
+}
+
+/* Sizes: lg (default) 44px, md 40px, sm 36px */
+.md {
+  --button-height: var(--size-control-md);
+  --button-padding-inline: var(--space-lg);
+  --button-font-size: var(--font-size-label);
+}
+
+.sm {
+  --button-height: var(--size-control-sm);
+  --button-padding-inline: var(--space-md);
+  --button-gap: var(--space-xs-sm);
+  --button-font-size: var(--font-size-label);
+}
+
+/* Variants */
+.secondary {
+  --button-border-color: var(--color-border-field);
+  --button-background: var(--color-bg);
+  --button-background-hover: var(--color-bg-subtle);
+  --button-color: var(--color-text-strong);
+}
+
+.danger {
+  --button-background: var(--color-danger);
+  --button-background-hover: var(--color-danger);
+  --button-color: var(--color-on-status);
 }

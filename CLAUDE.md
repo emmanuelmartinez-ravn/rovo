@@ -30,6 +30,10 @@ When implementing a feature, check MVP.md's acceptance criteria for it rather th
 - `pnpm preview` — preview the production build.
 - There is no test runner configured yet.
 
+## Commits and PRs
+
+One PR per feature, made of many atomic commits, each green on its own: the rules are in `.claude/skills/SLICING.md`, and the `commit` and `open-pr` skills apply them.
+
 ## Type safety
 
 `.oxlintrc.json` runs Oxlint with `"options": { "typeAware": true }` and enforces no unsafe typing — these fail lint (not just warn):

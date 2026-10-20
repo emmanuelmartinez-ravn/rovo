@@ -16,33 +16,49 @@
   --color-gray-200: #e3e5e9;
   --color-gray-300: #d5d8dd;
   --color-gray-400: #c4c8cf;
+  --color-gray-450: #a3a9b3;
   --color-gray-500: #7a808a;
   --color-gray-600: #5a606b;
   --color-gray-700: #4a505a;
   --color-gray-800: #3b4048;
+  --color-gray-850: #2b2f36;
   --color-gray-950: #16181d;
   --color-gray-950-a50: rgb(22 24 29 / 0.5);
+  --color-blue-25: #f3f6ff;
+  --color-blue-35: #eef3ff;
   --color-blue-50: #e8eeff;
+  --color-blue-100: #d3defb;
+  --color-blue-150: #c8d5fa;
   --color-blue-700: #2453d6;
   --color-blue-800: #1a3fa8;
+  --color-blue-900: #2b3550;
   --color-red-50: #fdeeec;
   --color-red-100: #fde8e6;
+  --color-red-200: #f1b5ae;
   --color-red-700: #b42318;
+  --color-red-800: #7a1a12;
+  --color-red-900: #5c1a14;
   --color-green-50: #e9f7ee;
   --color-green-700: #17803d;
   --color-green-800: #11632f;
+  --color-green-850: #1f4d2e;
+  --color-green-900: #0e4f26;
   --color-orange-50: #fff4eb;
   --color-orange-100: #ffe9d6;
   --color-orange-200: #ffe4cc;
+  --color-orange-300: #e8b48c;
   --color-orange-700: #b4500c;
   --color-orange-800: #8a3c08;
 
   /* Spacing and sizing (Tailwind's 4px scale; `-0-5` reads as 0.5) */
   --spacing-px: 1px;
   --spacing-0-5: 2px;
+  --spacing-0-75: 3px;
   --spacing-1: 4px;
   --spacing-1-5: 6px;
+  --spacing-1-75: 7px;
   --spacing-2: 8px;
+  --spacing-2-25: 9px;
   --spacing-2-5: 10px;
   --spacing-3: 12px;
   --spacing-3-5: 14px;
@@ -69,6 +85,7 @@
 
   /* Radius */
   --radius-sm: 3px;
+  --radius-xs: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
   --radius-xl: 10px;
@@ -78,6 +95,7 @@
   /* Typography */
   --font-sans: 'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  --text-11: 11px;
   --text-12: 12px;
   --text-xs: 13px;
   --text-sm: 14px;
@@ -87,6 +105,7 @@
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
+  --leading-none: 1;
   --leading-normal: 1.5;
   --leading-155: 1.55;
   --leading-relaxed: 1.7;

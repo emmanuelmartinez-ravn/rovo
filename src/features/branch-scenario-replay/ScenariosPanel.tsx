@@ -40,6 +40,18 @@ function DomainScenarios({ domain }: { domain: string }) {
   const [banner, setBanner] = useState<string | null>(null)
   const [problem, setProblem] = useState<string | null>(null)
   const [deleting, setDeleting] = useState<Scenario | null>(null)
+  // Scenario ids whose "Saved edge cases" section is open; they start collapsed.
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set())
+
+  function toggleEdgeCases(id: string) {
+    setExpanded((current) => {
+      const next = new Set(current)
+      if (!next.delete(id)) {
+        next.add(id)
+      }
+      return next
+    })
+  }
 
   /** Opens the editor on `editing`, or on a new scenario without it. */
   function openEditor(editing?: Scenario) {
@@ -123,6 +135,8 @@ function DomainScenarios({ domain }: { domain: string }) {
           <ScenarioCard
             key={scenario.id}
             scenario={scenario}
+            edgeCasesExpanded={expanded.has(scenario.id)}
+            onToggleEdgeCases={() => toggleEdgeCases(scenario.id)}
             onEdit={() => openEditor(scenario)}
             onDelete={() => setDeleting(scenario)}
           />

@@ -1,6 +1,6 @@
 import { useRef, useState, type FormEvent, type ReactNode } from 'react'
-import { parseEntries, type EntriesError } from '@/core/scenarios/scenario.ts'
-import { addScenario } from '@/core/scenarios/scenarioStore.ts'
+import { formatEntries, parseEntries, type EntriesError, type Scenario } from '@/core/scenarios/scenario.ts'
+import { addScenario, ScenarioNotFoundError, updateScenario } from '@/core/scenarios/scenarioStore.ts'
 import { useFormLabels } from '@/core/tabs/useFormLabels.ts'
 import { BackButton } from '@/shared/ui/BackButton.tsx'
 import { Button } from '@/shared/ui/Button.tsx'
@@ -11,20 +11,22 @@ import styles from './ScenarioEditor.module.css'
 
 type ScenarioEditorProps = {
   domain: string
+  /** The scenario to edit. Without it, the editor creates a new one. */
+  scenario?: Scenario
   onCancel: () => void
   onSaved: (name: string) => void
 }
 
-export function ScenarioEditor({ domain, onCancel, onSaved }: ScenarioEditorProps) {
+export function ScenarioEditor({ domain, scenario, onCancel, onSaved }: ScenarioEditorProps) {
   const labels = useFormLabels()
   const knownLabels = labels.status === 'ready' ? labels.labels : []
-  const [name, setName] = useState('')
-  // null until edited: the entries start as the page's labels, `Label: ` per line,
-  // filled in when they've been read.
-  const [entriesText, setEntriesText] = useState<string | null>(null)
+  const [name, setName] = useState(scenario?.name ?? '')
+  // A new scenario's entries are null until edited: they start as the page's
+  // labels, `Label: ` per line, filled in when they've been read.
+  const [entriesText, setEntriesText] = useState<string | null>(scenario ? formatEntries(scenario.entries) : null)
   const [submitted, setSubmitted] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [saveFailed, setSaveFailed] = useState(false)
+  const [saveFailure, setSaveFailure] = useState<string | null>(null)
   const nameRef = useRef<HTMLInputElement>(null)
   const entriesRef = useRef<HTMLTextAreaElement>(null)
 
@@ -46,13 +48,20 @@ export function ScenarioEditor({ domain, onCancel, onSaved }: ScenarioEditorProp
       return
     }
     setSaving(true)
-    setSaveFailed(false)
-    addScenario(domain, name.trim(), parsed.entries).then(
+    setSaveFailure(null)
+    const saved = scenario
+      ? updateScenario(domain, scenario.id, name.trim(), parsed.entries)
+      : addScenario(domain, name.trim(), parsed.entries)
+    saved.then(
       () => onSaved(name.trim()),
       (error: unknown) => {
         console.error('Failed to save scenario', error)
         setSaving(false)
-        setSaveFailed(true)
+        setSaveFailure(
+          error instanceof ScenarioNotFoundError
+            ? "This scenario no longer exists. It may have been deleted in another window."
+            : "Couldn't save the scenario. Try again.",
+        )
       },
     )
   }
@@ -61,7 +70,7 @@ export function ScenarioEditor({ domain, onCancel, onSaved }: ScenarioEditorProp
     <form className={styles.root} onSubmit={save} noValidate>
       <div className={styles.top}>
         <BackButton onClick={onCancel}>Scenarios</BackButton>
-        <h2 className={styles.title}>New scenario</h2>
+        <h2 className={styles.title}>{scenario ? 'Edit scenario' : 'New scenario'}</h2>
       </div>
       <TextField ref={nameRef} label="Name" value={name} onChange={setName} error={nameError} autoFocus />
       <LineEditor
@@ -77,10 +86,10 @@ export function ScenarioEditor({ domain, onCancel, onSaved }: ScenarioEditorProp
         error={entriesError && entriesMessage(entriesError)}
         errorLine={entriesError && entriesError.kind !== 'noEntries' ? entriesError.line : null}
       />
-      {saveFailed && <Notice>Couldn't save the scenario. Try again.</Notice>}
+      {saveFailure && <Notice>{saveFailure}</Notice>}
       <div className={styles.actions}>
         <Button type="submit" disabled={saving}>
-          Save scenario
+          {scenario ? 'Save changes' : 'Save scenario'}
         </Button>
         <Button variant="secondary" onClick={onCancel}>
           Cancel

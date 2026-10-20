@@ -4,10 +4,11 @@ import styles from './ScenarioCard.module.css'
 
 type ScenarioCardProps = {
   scenario: Scenario
+  onEdit: () => void
   onDelete: () => void
 }
 
-export function ScenarioCard({ scenario, onDelete }: ScenarioCardProps) {
+export function ScenarioCard({ scenario, onEdit, onDelete }: ScenarioCardProps) {
   const [first] = scenario.entries
   const count = scenario.entries.length
   const meta = `${first ? `${first.label}: ${first.value} · ` : ''}${count} ${count === 1 ? 'entry' : 'entries'}`
@@ -20,7 +21,10 @@ export function ScenarioCard({ scenario, onDelete }: ScenarioCardProps) {
       </div>
       <ActionMenu
         label={`More actions for ${scenario.name}`}
-        actions={[{ label: 'Delete scenario', icon: 'trash', tone: 'danger', onSelect: onDelete }]}
+        actions={[
+          { label: 'Edit scenario', icon: 'pencil', onSelect: onEdit },
+          { label: 'Delete scenario', icon: 'trash', tone: 'danger', onSelect: onDelete },
+        ]}
       />
     </li>
   )

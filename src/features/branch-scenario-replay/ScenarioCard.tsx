@@ -1,6 +1,7 @@
-import type { EdgeCase, Scenario } from '@/core/scenarios/scenario.ts'
+import { isOrphaned, type EdgeCase, type Scenario } from '@/core/scenarios/scenario.ts'
 import { ActionMenu } from '@/shared/ui/ActionMenu.tsx'
 import { Button } from '@/shared/ui/Button.tsx'
+import { Icon } from '@/shared/ui/Icon.tsx'
 import { EdgeCaseSection } from './EdgeCaseSection.tsx'
 import styles from './ScenarioCard.module.css'
 
@@ -11,6 +12,8 @@ type ScenarioCardProps = {
   onToggleEdgeCases: () => void
   onEdit: () => void
   onDelete: () => void
+  onRun: () => void
+  onRunEdgeCase: (edgeCase: EdgeCase) => void
   onAddEdgeCase: () => void
   onEditEdgeCase: (edgeCase: EdgeCase) => void
   onDeleteEdgeCase: (edgeCase: EdgeCase) => void
@@ -22,6 +25,8 @@ export function ScenarioCard({
   onToggleEdgeCases,
   onEdit,
   onDelete,
+  onRun,
+  onRunEdgeCase,
   onAddEdgeCase,
   onEditEdgeCase,
   onDeleteEdgeCase,
@@ -46,6 +51,9 @@ export function ScenarioCard({
         />
       </div>
       <div className={styles.actions}>
+        <Button size="md" icon="play" iconSize="tiny" className={styles.cardButton} onClick={onRun}>
+          Run
+        </Button>
         <Button variant="secondary" size="md" icon="swap" className={styles.addEdgeCase} onClick={onAddEdgeCase}>
           Add edge case
         </Button>
@@ -56,14 +64,26 @@ export function ScenarioCard({
           expanded={edgeCasesExpanded}
           onToggle={onToggleEdgeCases}
           renderActions={(edgeCase) => (
-            <ActionMenu
+            <>
+              <button
+                type="button"
+                className={styles.edgeCaseRun}
+                aria-label={`Run with ${edgeCase.name}`}
+                title={isOrphaned(scenario, edgeCase) ? `${edgeCase.label} isn't in this scenario anymore` : undefined}
+                disabled={isOrphaned(scenario, edgeCase)}
+                onClick={() => onRunEdgeCase(edgeCase)}
+              >
+                <Icon name="play" size="tiny" />
+              </button>
+              <ActionMenu
               className={styles.edgeCaseMenu}
               label={`More actions for ${edgeCase.name}`}
               actions={[
                 { label: 'Edit edge case', icon: 'pencil', onSelect: () => onEditEdgeCase(edgeCase) },
                 { label: 'Delete edge case', icon: 'trash', tone: 'danger', onSelect: () => onDeleteEdgeCase(edgeCase) },
               ]}
-            />
+              />
+            </>
           )}
         />
       )}

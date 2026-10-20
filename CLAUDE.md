@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Rovo is a Chrome extension (Manifest V3) for QA engineers that automates form filling for exploratory testing. It is currently a fresh Vite + React + TypeScript scaffold — `src/core/app/App.tsx` is an empty placeholder (the default Vite template has been removed), not the product itself. The product requirements live in `MVP.md` and should be treated as the authoritative spec for what to build next.
+Rovo is a Chrome extension (Manifest V3, Vite + React + TypeScript) for QA engineers that automates form filling for exploratory testing. The product requirements live in `MVP.md` and should be treated as the authoritative spec for what to build next.
+
+Built so far, all in the side panel: the header with the active tab's domain; scenarios saved per domain (create, edit, delete); edge cases per scenario (create, edit, delete); and running a scenario or edge case against the open form — MVP features 1 and 2. Next per MVP.md: the run log, the session coverage view, unique values per run.
 
 ### Product shape (from MVP.md)
 
@@ -29,6 +31,10 @@ When implementing a feature, check MVP.md's acceptance criteria for it rather th
 - `pnpm lint` — run Oxlint (`.oxlintrc.json`) in type-aware mode (requires the `oxlint-tsgolint` devDependency, already installed), then Stylelint (`stylelint.config.mjs`) over `src/**/*.css` for the design-token rules.
 - `pnpm preview` — preview the production build.
 - There is no test runner configured yet.
+
+## Commits and PRs
+
+One PR per feature, made of many atomic commits, each green on its own: the rules are in `.claude/skills/SLICING.md`, and the `commit` and `open-pr` skills apply them.
 
 ## Type safety
 
@@ -73,8 +79,9 @@ Building a new component from a design runs through the `build-component` skill.
 
 ## Architecture
 
-- **`manifest.json`** declares this as a side-panel extension: the `sidePanel` permission is granted, and `action` + `side_panel.default_path: index.html` mean clicking the toolbar icon opens the extension UI in Chrome's side panel, not a popup. Moving an entry point means updating its path here (and in `index.html` for the side panel).
+- **`manifest.json`** declares this as a side-panel extension: `action` + `side_panel.default_path: index.html` mean clicking the toolbar icon opens the extension UI in Chrome's side panel, not a popup. Moving an entry point means updating its path here (and in `index.html` for the side panel). Permissions: `sidePanel`, `tabs` (read tab URLs), `scripting` + `http(s)://*/*` host access (inject into tested pages), `storage` (saved scenarios). An already-loaded unpacked extension keeps its old grants after a permission is added: remove it and load `dist/` again.
 - **`src/core/background/background.ts`** is the MV3 service worker. Today it only sets `openPanelOnActionClick: true`. Logic that needs to run independent of the side panel's lifetime (e.g. coordinating with content scripts, persisting state across side-panel open/close) belongs here.
-- **`src/core/app/`** is the side panel UI: `main.tsx` (loaded by `index.html`) renders `App.tsx` and imports the global stylesheet `@/shared/styles/index.css`. This is where features get composed into the scenario editor/runner UI described in MVP.md.
-- **Form interaction** (finding fields by label, filling them, waiting for conditional fields to appear) will need a content script injected into the tested page — none exists yet. It belongs in `src/core/` (e.g. `src/core/content/`), and it needs its own entry in `manifest.json` (`content_scripts`) and `permissions`/`host_permissions` as needed, and `vite.config.ts`'s crx plugin picks it up from the manifest automatically.
+- **`src/core/app/`** is the side panel UI: `main.tsx` (loaded by `index.html`) renders `App.tsx` and imports the global stylesheet `@/shared/styles/index.css`. `App.tsx` mounts the `Header` and the `branch-scenario-replay` feature's `ScenariosPanel`.
+- **Page code** lives in `src/core/content/` and is injected on demand with `chrome.scripting.executeScript({ func })` — there are no declared `content_scripts`. Chrome serializes an injected `func` by its source, so each one must be **self-contained**: no imports used at runtime, no references outside its own body (type-only imports are fine; message type strings are repeated as literals). `formLabelWatcher.ts` reports the page's field labels live; `scenarioRunner.ts` fills a run's entries one at a time, retrying each label for `ENTRY_TIMEOUT_MS` (`src/core/run/run.ts`). They talk to the panel through `chrome.runtime` messages, validated with the type guards next to their types.
+- **Domain modules** in `src/core/`: `scenarios/` (the scenario and edge-case model, the entries parser, `chrome.storage.local` persistence keyed by domain, `useScenarios`), `run/` (a run's entries and events, `useScenarioRun`), `tabs/` (the active tab's domain and form labels).
 - TypeScript is split into two project references (`tsconfig.app.json` for `src/`, targeting ES2023/DOM with `chrome` types; `tsconfig.node.json` for `vite.config.ts`) under the root `tsconfig.json` — this is why `tsc -b` (build mode) is used rather than a plain `tsc`.

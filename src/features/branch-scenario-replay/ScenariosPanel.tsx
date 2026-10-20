@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
-import type { Scenario } from '@/core/scenarios/scenario.ts'
-import { deleteScenario } from '@/core/scenarios/scenarioStore.ts'
+import type { EdgeCase, Scenario } from '@/core/scenarios/scenario.ts'
+import { deleteEdgeCase, deleteScenario } from '@/core/scenarios/scenarioStore.ts'
 import { useScenarios } from '@/core/scenarios/useScenarios.ts'
 import { useActiveTabDomain } from '@/core/tabs/useActiveTabDomain.ts'
 import { Banner } from '@/shared/ui/Banner.tsx'
@@ -8,10 +8,14 @@ import { Button } from '@/shared/ui/Button.tsx'
 import { ConfirmDialog } from '@/shared/ui/ConfirmDialog.tsx'
 import { Notice } from '@/shared/ui/Notice.tsx'
 import { Skeleton } from '@/shared/ui/Skeleton.tsx'
+import { EdgeCaseEditor } from './EdgeCaseEditor.tsx'
 import { EmptyScenarios } from './EmptyScenarios.tsx'
 import { ScenarioCard } from './ScenarioCard.tsx'
 import { ScenarioEditor } from './ScenarioEditor.tsx'
 import styles from './ScenariosPanel.module.css'
+
+/** What the delete confirmation is about. */
+type Deleting = { kind: 'scenario'; scenario: Scenario } | { kind: 'edgeCase'; scenario: Scenario; edgeCase: EdgeCase }
 
 /** Scenarios are saved per domain, so the panel follows the active tab's. */
 export function ScenariosPanel() {
@@ -35,11 +39,34 @@ export function ScenariosPanel() {
 
 function DomainScenarios({ domain }: { domain: string }) {
   const scenarios = useScenarios(domain)
-  const [view, setView] = useState<{ kind: 'list' } | { kind: 'editor'; editing?: Scenario }>({ kind: 'list' })
+  const [view, setView] = useState<
+    | { kind: 'list' }
+    | { kind: 'editor'; editing?: Scenario }
+    | { kind: 'edgeCaseEditor'; scenario: Scenario; editing?: EdgeCase }
+  >({ kind: 'list' })
   // Shown until the tester leaves the list.
   const [banner, setBanner] = useState<string | null>(null)
   const [problem, setProblem] = useState<string | null>(null)
-  const [deleting, setDeleting] = useState<Scenario | null>(null)
+  const [deleting, setDeleting] = useState<Deleting | null>(null)
+  // Scenario ids whose "Saved edge cases" section is open; they start collapsed.
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set())
+
+  function toggleEdgeCases(id: string) {
+    setExpanded((current) => {
+      const next = new Set(current)
+      if (!next.delete(id)) {
+        next.add(id)
+      }
+      return next
+    })
+  }
+
+  /** Opens the edge-case editor for `scenario`, on `editing` or on a new edge case. */
+  function openEdgeCaseEditor(scenario: Scenario, editing?: EdgeCase) {
+    setBanner(null)
+    setProblem(null)
+    setView({ kind: 'edgeCaseEditor', scenario, editing })
+  }
 
   /** Opens the editor on `editing`, or on a new scenario without it. */
   function openEditor(editing?: Scenario) {
@@ -52,15 +79,22 @@ function DomainScenarios({ domain }: { domain: string }) {
     if (!deleting) {
       return
     }
-    const { id, name } = deleting
     setDeleting(null)
-    deleteScenario(domain, id).then(
+    const [deleted, done] =
+      deleting.kind === 'scenario'
+        ? [deleteScenario(domain, deleting.scenario.id), `Scenario “${deleting.scenario.name}” deleted`]
+        : [
+            deleteEdgeCase(domain, deleting.scenario.id, deleting.edgeCase.id),
+            `Edge case “${deleting.edgeCase.name}” deleted`,
+          ]
+    const name = deleting.kind === 'scenario' ? deleting.scenario.name : deleting.edgeCase.name
+    deleted.then(
       () => {
         setProblem(null)
-        setBanner(`Scenario “${name}” deleted`)
+        setBanner(done)
       },
       (error: unknown) => {
-        console.error('Failed to delete scenario', error)
+        console.error('Failed to delete', error)
         setBanner(null)
         setProblem(`Couldn't delete “${name}”. Try again.`)
       },
@@ -76,6 +110,23 @@ function DomainScenarios({ domain }: { domain: string }) {
         onCancel={() => setView({ kind: 'list' })}
         onSaved={(name) => {
           setBanner(`Scenario “${name}” ${editing ? 'updated' : 'saved'}`)
+          setView({ kind: 'list' })
+        }}
+      />
+    )
+  }
+  if (view.kind === 'edgeCaseEditor') {
+    const { scenario, editing } = view
+    return (
+      <EdgeCaseEditor
+        domain={domain}
+        scenario={scenario}
+        edgeCase={editing}
+        onCancel={() => setView({ kind: 'list' })}
+        onSaved={(name) => {
+          setBanner(`Edge case “${name}” ${editing ? 'updated' : 'saved'}`)
+          // Open the section so the tester sees what they just saved.
+          setExpanded((current) => new Set(current).add(scenario.id))
           setView({ kind: 'list' })
         }}
       />
@@ -123,21 +174,42 @@ function DomainScenarios({ domain }: { domain: string }) {
           <ScenarioCard
             key={scenario.id}
             scenario={scenario}
+            edgeCasesExpanded={expanded.has(scenario.id)}
+            onToggleEdgeCases={() => toggleEdgeCases(scenario.id)}
             onEdit={() => openEditor(scenario)}
-            onDelete={() => setDeleting(scenario)}
+            onDelete={() => setDeleting({ kind: 'scenario', scenario })}
+            onAddEdgeCase={() => openEdgeCaseEditor(scenario)}
+            onEditEdgeCase={(edgeCase) => openEdgeCaseEditor(scenario, edgeCase)}
+            onDeleteEdgeCase={(edgeCase) => setDeleting({ kind: 'edgeCase', scenario, edgeCase })}
           />
         ))}
       </ul>
       <ConfirmDialog
         open={deleting !== null}
-        title={`Delete “${deleting?.name ?? ''}”?`}
-        body="The scenario will be permanently deleted. This can’t be undone."
-        confirmLabel="Delete scenario"
+        {...deleteCopy(deleting)}
         onConfirm={confirmDelete}
         onCancel={() => setDeleting(null)}
       />
     </section>
   )
+}
+
+/** The mockup's wording for each kind of delete. */
+function deleteCopy(deleting: Deleting | null): { title: string; body: string; confirmLabel: string } {
+  if (deleting?.kind === 'edgeCase') {
+    return {
+      title: `Delete edge case “${deleting.edgeCase.name}”?`,
+      body: `It will be removed from “${deleting.scenario.name}”. The scenario itself isn’t changed. This can’t be undone.`,
+      confirmLabel: 'Delete edge case',
+    }
+  }
+  const count = deleting?.scenario.edgeCases.length ?? 0
+  const edgeCases = count === 0 ? '' : ` and its ${count} saved edge case${count === 1 ? '' : 's'}`
+  return {
+    title: `Delete “${deleting?.scenario.name ?? ''}”?`,
+    body: `The scenario${edgeCases} will be permanently deleted. This can’t be undone.`,
+    confirmLabel: 'Delete scenario',
+  }
 }
 
 function Heading() {

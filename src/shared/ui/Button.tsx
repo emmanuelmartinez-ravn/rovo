@@ -13,10 +13,12 @@ type ButtonProps = {
   type?: 'button' | 'submit'
   disabled?: boolean
   onClick?: () => void
+  /** A scoped class that overrides the button's component tokens (`--button-*`). */
+  className?: string
 }
 
-export function Button({ children, icon, variant = 'primary', size = 'lg', type = 'button', disabled, onClick }: ButtonProps) {
-  const className = [styles.root, size !== 'lg' && styles[size], variant !== 'primary' && styles[variant]]
+export function Button({ children, icon, variant = 'primary', size = 'lg', type = 'button', disabled, onClick, className: override }: ButtonProps) {
+  const className = [styles.root, size !== 'lg' && styles[size], variant !== 'primary' && styles[variant], override]
     .filter(Boolean)
     .join(' ')
   return (

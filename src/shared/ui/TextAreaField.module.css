@@ -1,0 +1,42 @@
+.textarea {
+  --textarea-height: var(--size-field-tall);
+  --textarea-padding-block: var(--space-sm-md);
+  --textarea-padding-inline: var(--space-md);
+  --textarea-border-width: var(--border-width-thin);
+  --textarea-border-color: var(--color-border-field);
+  --textarea-radius: var(--radius-field);
+  --textarea-font: inherit;
+  --textarea-font-size: var(--font-size-body);
+  --textarea-line-height: var(--line-height-body);
+  --textarea-focus-width: var(--border-width-medium);
+  --textarea-focus-color: var(--color-accent);
+  --textarea-focus-offset: var(--space-2xs);
+
+  height: var(--textarea-height);
+  padding: var(--textarea-padding-block) var(--textarea-padding-inline);
+  border: var(--textarea-border-width) solid var(--textarea-border-color);
+  border-radius: var(--textarea-radius);
+  font-family: var(--textarea-font);
+  font-size: var(--textarea-font-size);
+  line-height: var(--textarea-line-height);
+  color: var(--color-text-strong);
+  background: var(--color-bg);
+  resize: none;
+  outline: none;
+}
+
+.textarea:focus-visible {
+  outline: var(--textarea-focus-width) solid var(--textarea-focus-color);
+  outline-offset: var(--textarea-focus-offset);
+}
+
+.textarea[aria-invalid='true'] {
+  --textarea-border-width: var(--border-width-medium);
+  --textarea-border-color: var(--color-danger);
+}
+
+.help {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-body);
+  color: var(--color-text);
+}

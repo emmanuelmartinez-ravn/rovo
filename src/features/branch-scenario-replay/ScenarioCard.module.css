@@ -4,6 +4,7 @@
   --card-border-color: var(--color-border);
   --card-radius: var(--radius-card);
   --card-background: var(--color-bg);
+  --card-gap: var(--space-md);
   --card-header-gap: var(--space-sm);
   --card-text-gap: var(--space-xs);
   --card-title-size: var(--font-size-heading-3);
@@ -13,13 +14,19 @@
   --card-meta-color: var(--color-text);
 
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--card-header-gap);
+  flex-direction: column;
+  gap: var(--card-gap);
   padding: var(--card-padding);
   border: var(--card-border-width) solid var(--card-border-color);
   border-radius: var(--card-radius);
   background: var(--card-background);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--card-header-gap);
 }
 
 .text {
@@ -41,4 +48,24 @@
   font-size: var(--card-meta-size);
   color: var(--card-meta-color);
   overflow-wrap: anywhere;
+}
+
+.actions {
+  --card-actions-gap: var(--space-sm);
+
+  display: flex;
+  gap: var(--card-actions-gap);
+}
+
+/* The mockup's card buttons pad 14px, and the swap icon wears the edge-case accent. */
+.addEdgeCase {
+  --button-padding-inline: var(--space-md-lg);
+}
+
+.addEdgeCase > svg {
+  color: var(--color-warning);
+}
+
+.edgeCaseMenu {
+  --menu-trigger-pressed: var(--color-warning-pressed);
 }

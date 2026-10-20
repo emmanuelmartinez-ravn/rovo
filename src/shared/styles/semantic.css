@@ -44,8 +44,12 @@
   --color-success-strong: var(--color-green-800);
   --color-warning: var(--color-orange-700);
   --color-warning-bg: var(--color-orange-50);
+  --color-warning-subtle: var(--color-orange-100);
+  --color-warning-pressed: var(--color-orange-200);
+  --color-warning-strong: var(--color-orange-800);
 
   /* Space */
+  --space-hairline: var(--spacing-px);
   --space-2xs: var(--spacing-0-5);
   --space-xs: var(--spacing-1);
   --space-xs-sm: var(--spacing-1-5);
@@ -72,7 +76,9 @@
   --size-control-sm: var(--spacing-9);
   --size-control-xs: var(--spacing-7);
   --size-field: var(--spacing-10);
+  --size-field-tall: var(--spacing-16);
   --size-badge-lg: var(--spacing-10);
+  --size-badge-sm: var(--spacing-5);
   --size-line-code: var(--spacing-5-5);
   --size-editor-gutter: var(--spacing-8-5);
   --size-editor-min: var(--spacing-42);
@@ -121,4 +127,5 @@
   --opacity-muted: var(--opacity-50);
   --motion-spin-duration: var(--duration-1000);
   --motion-pulse-duration: var(--duration-2000);
+  --motion-quick-duration: var(--duration-150);
 }

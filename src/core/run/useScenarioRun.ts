@@ -98,7 +98,13 @@ export function useScenarioRun(): {
         update((run) => apply(run, message.event))
       }
     }
-    const interrupt = () => update((run) => ({ ...run, status: 'interrupted' }))
+    // Nothing is running any more: the step that was in progress goes back to not done.
+    const interrupt = () =>
+      update((run) => ({
+        ...run,
+        status: 'interrupted',
+        steps: run.steps.map((step) => (step === 'active' ? 'pending' : step)),
+      }))
     function onUpdated(changedTabId: number, change: chrome.tabs.OnUpdatedInfo) {
       // A new document is loading: the page running the scenario is gone.
       if (changedTabId === tabId && change.status === 'loading') {

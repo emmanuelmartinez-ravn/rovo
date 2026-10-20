@@ -11,6 +11,7 @@ const icons = {
       <circle className={styles.filled} cx="12" cy="19" r="1.8" />
     </>
   ),
+  pencil: <path d="M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4" strokeWidth="1.8" />,
   trash: <path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" strokeWidth="1.8" />,
   error: (
     <>

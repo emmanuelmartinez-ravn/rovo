@@ -65,3 +65,7 @@
 .addEdgeCase > svg {
   color: var(--color-warning);
 }
+
+.edgeCaseMenu {
+  --menu-trigger-pressed: var(--color-warning-pressed);
+}

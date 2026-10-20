@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import type { Scenario } from '@/core/scenarios/scenario.ts'
+import type { EdgeCase, Scenario } from '@/core/scenarios/scenario.ts'
 import { deleteScenario } from '@/core/scenarios/scenarioStore.ts'
 import { useScenarios } from '@/core/scenarios/useScenarios.ts'
 import { useActiveTabDomain } from '@/core/tabs/useActiveTabDomain.ts'
@@ -39,7 +39,7 @@ function DomainScenarios({ domain }: { domain: string }) {
   const [view, setView] = useState<
     | { kind: 'list' }
     | { kind: 'editor'; editing?: Scenario }
-    | { kind: 'edgeCaseEditor'; scenario: Scenario }
+    | { kind: 'edgeCaseEditor'; scenario: Scenario; editing?: EdgeCase }
   >({ kind: 'list' })
   // Shown until the tester leaves the list.
   const [banner, setBanner] = useState<string | null>(null)
@@ -58,11 +58,11 @@ function DomainScenarios({ domain }: { domain: string }) {
     })
   }
 
-  /** Opens the edge-case editor on a new edge case for `scenario`. */
-  function openEdgeCaseEditor(scenario: Scenario) {
+  /** Opens the edge-case editor for `scenario`, on `editing` or on a new edge case. */
+  function openEdgeCaseEditor(scenario: Scenario, editing?: EdgeCase) {
     setBanner(null)
     setProblem(null)
-    setView({ kind: 'edgeCaseEditor', scenario })
+    setView({ kind: 'edgeCaseEditor', scenario, editing })
   }
 
   /** Opens the editor on `editing`, or on a new scenario without it. */
@@ -106,14 +106,15 @@ function DomainScenarios({ domain }: { domain: string }) {
     )
   }
   if (view.kind === 'edgeCaseEditor') {
-    const { scenario } = view
+    const { scenario, editing } = view
     return (
       <EdgeCaseEditor
         domain={domain}
         scenario={scenario}
+        edgeCase={editing}
         onCancel={() => setView({ kind: 'list' })}
         onSaved={(name) => {
-          setBanner(`Edge case “${name}” saved`)
+          setBanner(`Edge case “${name}” ${editing ? 'updated' : 'saved'}`)
           // Open the section so the tester sees what they just saved.
           setExpanded((current) => new Set(current).add(scenario.id))
           setView({ kind: 'list' })
@@ -168,6 +169,7 @@ function DomainScenarios({ domain }: { domain: string }) {
             onEdit={() => openEditor(scenario)}
             onDelete={() => setDeleting(scenario)}
             onAddEdgeCase={() => openEdgeCaseEditor(scenario)}
+            onEditEdgeCase={(edgeCase) => openEdgeCaseEditor(scenario, edgeCase)}
           />
         ))}
       </ul>

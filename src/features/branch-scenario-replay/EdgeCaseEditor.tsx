@@ -1,6 +1,11 @@
 import { useId, useRef, useState, type FormEvent } from 'react'
-import { targetEntry, type Scenario } from '@/core/scenarios/scenario.ts'
-import { addEdgeCase, ScenarioNotFoundError } from '@/core/scenarios/scenarioStore.ts'
+import { targetEntry, type EdgeCase, type Scenario } from '@/core/scenarios/scenario.ts'
+import {
+  addEdgeCase,
+  EdgeCaseNotFoundError,
+  ScenarioNotFoundError,
+  updateEdgeCase,
+} from '@/core/scenarios/scenarioStore.ts'
 import { BackButton } from '@/shared/ui/BackButton.tsx'
 import { Button } from '@/shared/ui/Button.tsx'
 import { FieldError } from '@/shared/ui/FieldError.tsx'
@@ -13,6 +18,8 @@ import styles from './EdgeCaseEditor.module.css'
 type EdgeCaseEditorProps = {
   domain: string
   scenario: Scenario
+  /** The edge case to edit. Without it, the editor adds a new one. */
+  edgeCase?: EdgeCase
   onCancel: () => void
   onSaved: (name: string) => void
 }
@@ -22,10 +29,13 @@ type EdgeCaseEditorProps = {
  * value to use instead, and a name. Saving doesn't change the scenario's own
  * entries.
  */
-export function EdgeCaseEditor({ domain, scenario, onCancel, onSaved }: EdgeCaseEditorProps) {
-  const [label, setLabel] = useState<string | null>(null)
-  const [value, setValue] = useState('')
-  const [name, setName] = useState('')
+export function EdgeCaseEditor({ domain, scenario, edgeCase, onCancel, onSaved }: EdgeCaseEditorProps) {
+  // An orphaned edge case's label isn't among the entries, so nothing is chosen.
+  const [label, setLabel] = useState<string | null>(
+    edgeCase && targetEntry(scenario, edgeCase) ? edgeCase.label : null,
+  )
+  const [value, setValue] = useState(edgeCase?.value ?? '')
+  const [name, setName] = useState(edgeCase?.name ?? '')
   const [submitted, setSubmitted] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saveFailure, setSaveFailure] = useState<string | null>(null)
@@ -62,14 +72,17 @@ export function EdgeCaseEditor({ domain, scenario, onCancel, onSaved }: EdgeCase
     const fields = { name: name.trim(), label, value }
     setSaving(true)
     setSaveFailure(null)
-    addEdgeCase(domain, scenario.id, fields).then(
+    const saved = edgeCase
+      ? updateEdgeCase(domain, scenario.id, edgeCase.id, fields)
+      : addEdgeCase(domain, scenario.id, fields)
+    saved.then(
       () => onSaved(fields.name),
       (error: unknown) => {
         console.error('Failed to save edge case', error)
         setSaving(false)
         setSaveFailure(
-          error instanceof ScenarioNotFoundError
-            ? 'This scenario no longer exists. It may have been deleted in another window.'
+          error instanceof ScenarioNotFoundError || error instanceof EdgeCaseNotFoundError
+            ? `${error instanceof ScenarioNotFoundError ? 'This scenario' : 'This edge case'} no longer exists. It may have been deleted in another window.`
             : "Couldn't save the edge case. Try again.",
         )
       },
@@ -80,7 +93,7 @@ export function EdgeCaseEditor({ domain, scenario, onCancel, onSaved }: EdgeCase
     <form className={layout.root} onSubmit={save} noValidate>
       <div className={layout.top}>
         <BackButton onClick={onCancel}>Scenarios</BackButton>
-        <h2 className={layout.title}>New edge case</h2>
+        <h2 className={layout.title}>{edgeCase ? 'Edit edge case' : 'New edge case'}</h2>
         <span className={styles.subtitle}>{scenario.name}</span>
       </div>
       <fieldset className={styles.picker} aria-describedby={entryError ? entryErrorId : undefined}>
@@ -115,7 +128,7 @@ export function EdgeCaseEditor({ domain, scenario, onCancel, onSaved }: EdgeCase
       {saveFailure && <Notice>{saveFailure}</Notice>}
       <div className={layout.actions}>
         <Button type="submit" disabled={saving}>
-          Save edge case
+          {edgeCase ? 'Save changes' : 'Save edge case'}
         </Button>
         <Button variant="secondary" onClick={onCancel}>
           Cancel

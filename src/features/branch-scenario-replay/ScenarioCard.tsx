@@ -1,4 +1,4 @@
-import type { Scenario } from '@/core/scenarios/scenario.ts'
+import type { EdgeCase, Scenario } from '@/core/scenarios/scenario.ts'
 import { ActionMenu } from '@/shared/ui/ActionMenu.tsx'
 import { Button } from '@/shared/ui/Button.tsx'
 import { EdgeCaseSection } from './EdgeCaseSection.tsx'
@@ -12,6 +12,7 @@ type ScenarioCardProps = {
   onEdit: () => void
   onDelete: () => void
   onAddEdgeCase: () => void
+  onEditEdgeCase: (edgeCase: EdgeCase) => void
 }
 
 export function ScenarioCard({
@@ -21,6 +22,7 @@ export function ScenarioCard({
   onEdit,
   onDelete,
   onAddEdgeCase,
+  onEditEdgeCase,
 }: ScenarioCardProps) {
   const [first] = scenario.entries
   const count = scenario.entries.length
@@ -47,7 +49,18 @@ export function ScenarioCard({
         </Button>
       </div>
       {scenario.edgeCases.length > 0 && (
-        <EdgeCaseSection scenario={scenario} expanded={edgeCasesExpanded} onToggle={onToggleEdgeCases} />
+        <EdgeCaseSection
+          scenario={scenario}
+          expanded={edgeCasesExpanded}
+          onToggle={onToggleEdgeCases}
+          renderActions={(edgeCase) => (
+            <ActionMenu
+              className={styles.edgeCaseMenu}
+              label={`More actions for ${edgeCase.name}`}
+              actions={[{ label: 'Edit edge case', icon: 'pencil', onSelect: () => onEditEdgeCase(edgeCase) }]}
+            />
+          )}
+        />
       )}
     </li>
   )

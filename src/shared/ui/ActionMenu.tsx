@@ -13,6 +13,8 @@ type ActionMenuProps = {
   /** Accessible name of the ⋮ trigger, e.g. "More actions for Business — LLC". */
   label: string
   actions: Action[]
+  /** A scoped class that overrides the menu's component tokens (`--menu-*`). */
+  className?: string
 }
 
 /**
@@ -20,7 +22,7 @@ type ActionMenuProps = {
  * disclosure (button + list of buttons) so it needs no menu roles or roving
  * focus: Tab moves through the actions, Escape or a click outside closes it.
  */
-export function ActionMenu({ label, actions }: ActionMenuProps) {
+export function ActionMenu({ label, actions, className }: ActionMenuProps) {
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -50,7 +52,7 @@ export function ActionMenu({ label, actions }: ActionMenuProps) {
   }, [open])
 
   return (
-    <div ref={rootRef} className={styles.root}>
+    <div ref={rootRef} className={className ? `${styles.root} ${className}` : styles.root}>
       <button
         ref={triggerRef}
         type="button"

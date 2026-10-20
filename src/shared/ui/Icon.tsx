@@ -4,6 +4,8 @@ import styles from './Icon.module.css'
 const icons = {
   plus: <path d="M12 5v14M5 12h14" strokeWidth="2.2" />,
   chevronLeft: <path d="M15 6l-6 6 6 6" strokeWidth="2.2" />,
+  chevronDown: <path d="M6 9l6 6 6-6" strokeWidth="2" />,
+  swap: <path d="M4 8h13l-3-3M20 16H7l3 3" strokeWidth="2" />,
   kebab: (
     <>
       <circle className={styles.filled} cx="12" cy="5" r="1.8" />

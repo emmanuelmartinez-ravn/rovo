@@ -76,7 +76,6 @@
   --count-background: var(--color-warning-subtle);
   --count-color: var(--color-warning-strong);
   --count-font-size: var(--font-size-caption);
-  --count-font-weight: var(--font-weight-body);
 
   box-sizing: border-box;
   min-width: var(--count-size);
@@ -84,7 +83,6 @@
   padding: 0 var(--count-padding);
   border-radius: var(--radius-round);
   font-size: var(--count-font-size);
-  font-weight: var(--count-font-weight);
   line-height: var(--count-size);
   text-align: center;
   color: var(--count-color);

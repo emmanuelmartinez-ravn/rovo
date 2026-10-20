@@ -35,16 +35,17 @@ export function ScenariosPanel() {
 
 function DomainScenarios({ domain }: { domain: string }) {
   const scenarios = useScenarios(domain)
-  const [view, setView] = useState<'list' | 'editor'>('list')
+  const [view, setView] = useState<{ kind: 'list' } | { kind: 'editor'; editing?: Scenario }>({ kind: 'list' })
   // Shown until the tester leaves the list.
   const [banner, setBanner] = useState<string | null>(null)
   const [problem, setProblem] = useState<string | null>(null)
   const [deleting, setDeleting] = useState<Scenario | null>(null)
 
-  function openEditor() {
+  /** Opens the editor on `editing`, or on a new scenario without it. */
+  function openEditor(editing?: Scenario) {
     setBanner(null)
     setProblem(null)
-    setView('editor')
+    setView({ kind: 'editor', editing })
   }
 
   function confirmDelete() {
@@ -66,14 +67,16 @@ function DomainScenarios({ domain }: { domain: string }) {
     )
   }
 
-  if (view === 'editor') {
+  if (view.kind === 'editor') {
+    const { editing } = view
     return (
       <ScenarioEditor
         domain={domain}
-        onCancel={() => setView('list')}
+        scenario={editing}
+        onCancel={() => setView({ kind: 'list' })}
         onSaved={(name) => {
-          setBanner(`Scenario “${name}” saved`)
-          setView('list')
+          setBanner(`Scenario “${name}” ${editing ? 'updated' : 'saved'}`)
+          setView({ kind: 'list' })
         }}
       />
     )
@@ -102,7 +105,7 @@ function DomainScenarios({ domain }: { domain: string }) {
       <section className={styles.emptyView}>
         {messages}
         <Heading />
-        <EmptyScenarios onNew={openEditor} />
+        <EmptyScenarios onNew={() => openEditor()} />
       </section>
     )
   }
@@ -111,13 +114,18 @@ function DomainScenarios({ domain }: { domain: string }) {
       {messages}
       <div className={styles.listHeader}>
         <Heading />
-        <Button variant="secondary" size="sm" icon="plus" onClick={openEditor}>
+        <Button variant="secondary" size="sm" icon="plus" onClick={() => openEditor()}>
           New
         </Button>
       </div>
       <ul className={styles.list}>
         {scenarios.scenarios.map((scenario) => (
-          <ScenarioCard key={scenario.id} scenario={scenario} onDelete={() => setDeleting(scenario)} />
+          <ScenarioCard
+            key={scenario.id}
+            scenario={scenario}
+            onEdit={() => openEditor(scenario)}
+            onDelete={() => setDeleting(scenario)}
+          />
         ))}
       </ul>
       <ConfirmDialog

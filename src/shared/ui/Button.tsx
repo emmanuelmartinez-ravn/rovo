@@ -6,6 +6,8 @@ type ButtonProps = {
   children: ReactNode
   /** Decorative icon before the text. */
   icon?: IconName
+  /** The icon's size; defaults to xs (14px) on sm buttons and sm (16px) otherwise. */
+  iconSize?: 'tiny' | 'xs' | 'sm'
   /** primary (default) filled accent, secondary outlined, danger filled red. */
   variant?: 'primary' | 'secondary' | 'danger'
   /** lg (default) 44px, md 40px, sm 36px. */
@@ -17,13 +19,23 @@ type ButtonProps = {
   className?: string
 }
 
-export function Button({ children, icon, variant = 'primary', size = 'lg', type = 'button', disabled, onClick, className: override }: ButtonProps) {
+export function Button({
+  children,
+  icon,
+  iconSize,
+  variant = 'primary',
+  size = 'lg',
+  type = 'button',
+  disabled,
+  onClick,
+  className: override,
+}: ButtonProps) {
   const className = [styles.root, size !== 'lg' && styles[size], variant !== 'primary' && styles[variant], override]
     .filter(Boolean)
     .join(' ')
   return (
     <button type={type} className={className} disabled={disabled} onClick={onClick}>
-      {icon && <Icon name={icon} size={size === 'sm' ? 'xs' : 'sm'} />}
+      {icon && <Icon name={icon} size={iconSize ?? (size === 'sm' ? 'xs' : 'sm')} />}
       {children}
     </button>
   )

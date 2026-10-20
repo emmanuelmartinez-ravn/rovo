@@ -1,12 +1,35 @@
 /** One `Label: value` line of a scenario, in path order. */
 export type Entry = { label: string; value: string }
 
+/**
+ * A saved edge case: the scenario run with one entry's value replaced. It
+ * targets its entry by label, so it outlives edits that reorder entries; when
+ * the scenario no longer has that label it's orphaned (see `isOrphaned`).
+ */
+export type EdgeCase = {
+  id: string
+  name: string
+  label: string
+  value: string
+  createdAt: number
+}
+
 /** A saved scenario: a named path through one domain's form. */
 export type Scenario = {
   id: string
   name: string
   entries: Entry[]
+  edgeCases: EdgeCase[]
   createdAt: number
+}
+
+/** The entry an edge case replaces, or undefined when it's gone from the scenario. */
+export function targetEntry(scenario: Scenario, edgeCase: Pick<EdgeCase, 'label'>): Entry | undefined {
+  return scenario.entries.find((entry) => entry.label === edgeCase.label)
+}
+
+export function isOrphaned(scenario: Scenario, edgeCase: EdgeCase): boolean {
+  return targetEntry(scenario, edgeCase) === undefined
 }
 
 /** Why a scenario's entries text can't be saved. `line` is 1-based. */
@@ -59,10 +82,36 @@ export function formatEntries(entries: readonly Entry[]): string {
   return entries.map(({ label, value }) => `${label}: ${value}`).join('\n')
 }
 
-export function isScenario(value: unknown): value is Scenario {
+/** A scenario as stored: scenarios saved before edge cases existed have none. */
+export type StoredScenario = Omit<Scenario, 'edgeCases'> & { edgeCases?: EdgeCase[] }
+
+const isRecord = (value: unknown): value is object => typeof value === 'object' && value !== null
+
+function isEntry(value: unknown): value is Entry {
   return (
-    typeof value === 'object' &&
-    value !== null &&
+    isRecord(value) &&
+    'label' in value &&
+    typeof value.label === 'string' &&
+    'value' in value &&
+    typeof value.value === 'string'
+  )
+}
+
+function isEdgeCase(value: unknown): value is EdgeCase {
+  return (
+    isEntry(value) &&
+    'id' in value &&
+    typeof value.id === 'string' &&
+    'name' in value &&
+    typeof value.name === 'string' &&
+    'createdAt' in value &&
+    typeof value.createdAt === 'number'
+  )
+}
+
+export function isStoredScenario(value: unknown): value is StoredScenario {
+  return (
+    isRecord(value) &&
     'id' in value &&
     typeof value.id === 'string' &&
     'name' in value &&
@@ -71,14 +120,9 @@ export function isScenario(value: unknown): value is Scenario {
     typeof value.createdAt === 'number' &&
     'entries' in value &&
     Array.isArray(value.entries) &&
-    value.entries.every(
-      (entry: unknown) =>
-        typeof entry === 'object' &&
-        entry !== null &&
-        'label' in entry &&
-        typeof entry.label === 'string' &&
-        'value' in entry &&
-        typeof entry.value === 'string',
-    )
+    value.entries.every(isEntry) &&
+    (!('edgeCases' in value) ||
+      value.edgeCases === undefined ||
+      (Array.isArray(value.edgeCases) && value.edgeCases.every(isEdgeCase)))
   )
 }

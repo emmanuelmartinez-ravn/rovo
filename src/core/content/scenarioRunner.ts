@@ -154,6 +154,15 @@ export function runScenarioInPage(
     field.dispatchEvent(new Event('change', { bubbles: true }))
   }
 
+  /**
+   * A native date field only takes `YYYY-MM-DD`, so a `MM/DD/YYYY` value (what
+   * `{date}` gives) is converted to it. Anything else goes in unchanged.
+   */
+  const toIsoDate = (value: string): string => {
+    const us = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(value.trim())
+    return us ? `${us[3]}-${us[1].padStart(2, '0')}-${us[2].padStart(2, '0')}` : value
+  }
+
   const fill = (target: Target, value: string): Outcome => {
     const want = normalize(value)
     if (target.kind === 'group') {
@@ -194,7 +203,7 @@ export function runScenarioInPage(
       return null
     }
     field.focus()
-    setNativeValue(field, value)
+    setNativeValue(field, field instanceof HTMLInputElement && field.type === 'date' ? toIsoDate(value) : value)
     field.blur()
     return null
   }

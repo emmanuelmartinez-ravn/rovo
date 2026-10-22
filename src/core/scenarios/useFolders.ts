@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react'
-import type { Scenario } from './scenario.ts'
-import { loadScenarios, storageKey, toScenarios } from './scenarioStore.ts'
+import { toFolders, type Folder } from './folder.ts'
+import { loadFolders, storageKey } from './scenarioStore.ts'
 
-export type ScenariosState =
+export type FoldersState =
   | { status: 'loading' }
-  | { status: 'ready'; scenarios: Scenario[] }
+  | { status: 'ready'; folders: Folder[] }
   | { status: 'error' }
 
-type Loaded = { domain: string; state: Exclude<ScenariosState, { status: 'loading' }> }
+type Loaded = { domain: string; state: Exclude<FoldersState, { status: 'loading' }> }
 
 /**
- * The saved scenarios for `domain`, kept in sync with storage, so a save or
- * delete from any panel (another window included) shows up everywhere.
+ * The saved folders for `domain`, with their scenarios, kept in sync with
+ * storage, so a save, move or delete from any panel (another window
+ * included) shows up everywhere.
  */
-export function useScenarios(domain: string): ScenariosState {
+export function useFolders(domain: string): FoldersState {
   const [loaded, setLoaded] = useState<Loaded | null>(null)
 
   useEffect(() => {
@@ -25,10 +26,10 @@ export function useScenarios(domain: string): ScenariosState {
       }
     }
 
-    loadScenarios(domain).then(
-      (scenarios) => settle({ status: 'ready', scenarios }),
+    loadFolders(domain).then(
+      (folders) => settle({ status: 'ready', folders }),
       (error: unknown) => {
-        console.error('Failed to load scenarios', error)
+        console.error('Failed to load folders', error)
         settle({ status: 'error' })
       },
     )
@@ -36,7 +37,7 @@ export function useScenarios(domain: string): ScenariosState {
     function onChanged(changes: Record<string, chrome.storage.StorageChange>, area: chrome.storage.AreaName) {
       const change = changes[key]
       if (area === 'local' && change !== undefined) {
-        settle({ status: 'ready', scenarios: toScenarios(change.newValue) })
+        settle({ status: 'ready', folders: toFolders(change.newValue) })
       }
     }
     chrome.storage.onChanged.addListener(onChanged)

@@ -55,3 +55,12 @@
   line-height: var(--line-height-body);
   color: var(--color-text);
 }
+
+/* Inside a form: the way back to the forms list, above the form's name. */
+.top {
+  --top-gap: var(--space-xs);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--top-gap);
+}

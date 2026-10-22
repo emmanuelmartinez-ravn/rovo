@@ -5,6 +5,8 @@ const icons = {
   plus: <path d="M12 5v14M5 12h14" strokeWidth="2.2" />,
   chevronLeft: <path d="M15 6l-6 6 6 6" strokeWidth="2.2" />,
   chevronDown: <path d="M6 9l6 6 6-6" strokeWidth="2" />,
+  chevronRight: <path d="M9 6l6 6-6 6" strokeWidth="2.2" />,
+  folder: <path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z" strokeWidth="1.8" />,
   swap: <path d="M4 8h13l-3-3M20 16H7l3 3" strokeWidth="2" />,
   kebab: (
     <>

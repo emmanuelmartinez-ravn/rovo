@@ -1,0 +1,68 @@
+/* Laid out like a scenario card, but the whole card (bar its menu) opens the form. */
+.root {
+  --card-padding: var(--space-md-lg);
+  --card-border-width: var(--border-width-thin);
+  --card-border-color: var(--color-border);
+  --card-radius: var(--radius-card);
+  --card-background: var(--color-bg);
+  --card-background-hover: var(--color-bg-subtle);
+  --card-gap: var(--space-sm);
+  --card-text-gap: var(--space-xs);
+  --card-title-size: var(--font-size-heading-3);
+  --card-title-weight: var(--font-weight-heading);
+  --card-meta-size: var(--font-size-caption);
+  --card-meta-color: var(--color-text);
+  --card-chevron-color: var(--color-text-meta);
+
+  display: flex;
+  align-items: center;
+  gap: var(--card-gap);
+  padding-right: var(--card-padding);
+  border: var(--card-border-width) solid var(--card-border-color);
+  border-radius: var(--card-radius);
+  background: var(--card-background);
+}
+
+.root:has(.open:hover) {
+  --card-background: var(--card-background-hover);
+}
+
+.open {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--card-gap);
+  min-width: 0;
+  padding: var(--card-padding);
+  border: 0;
+  border-radius: var(--card-radius);
+  font-family: inherit;
+  color: var(--card-chevron-color);
+  text-align: left;
+  background: none;
+  cursor: pointer;
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--card-text-gap);
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--card-title-size);
+  font-weight: var(--card-title-weight);
+  color: var(--color-text-strong);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  font-size: var(--card-meta-size);
+  color: var(--card-meta-color);
+}
+
+.menu {
+  flex: none;
+}

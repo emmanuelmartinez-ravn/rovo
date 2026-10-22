@@ -1,6 +1,6 @@
 import { useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { formatEntries, parseEntries, type EntriesError, type Scenario } from '@/core/scenarios/scenario.ts'
-import { addScenario, ScenarioNotFoundError, updateScenario } from '@/core/scenarios/scenarioStore.ts'
+import { addScenario, FolderNotFoundError, ScenarioNotFoundError, updateScenario } from '@/core/scenarios/scenarioStore.ts'
 import { useFormLabels } from '@/core/tabs/useFormLabels.ts'
 import { BackButton } from '@/shared/ui/BackButton.tsx'
 import { Button } from '@/shared/ui/Button.tsx'
@@ -11,13 +11,15 @@ import styles from './ScenarioEditor.module.css'
 
 type ScenarioEditorProps = {
   domain: string
+  /** The form a new scenario is saved into. */
+  folderId: string
   /** The scenario to edit. Without it, the editor creates a new one. */
   scenario?: Scenario
   onCancel: () => void
   onSaved: (name: string) => void
 }
 
-export function ScenarioEditor({ domain, scenario, onCancel, onSaved }: ScenarioEditorProps) {
+export function ScenarioEditor({ domain, folderId, scenario, onCancel, onSaved }: ScenarioEditorProps) {
   const labels = useFormLabels()
   const knownLabels = labels.status === 'ready' ? labels.labels : []
   const [name, setName] = useState(scenario?.name ?? '')
@@ -51,15 +53,15 @@ export function ScenarioEditor({ domain, scenario, onCancel, onSaved }: Scenario
     setSaveFailure(null)
     const saved = scenario
       ? updateScenario(domain, scenario.id, name.trim(), parsed.entries)
-      : addScenario(domain, name.trim(), parsed.entries)
+      : addScenario(domain, folderId, name.trim(), parsed.entries)
     saved.then(
       () => onSaved(name.trim()),
       (error: unknown) => {
         console.error('Failed to save scenario', error)
         setSaving(false)
         setSaveFailure(
-          error instanceof ScenarioNotFoundError
-            ? "This scenario no longer exists. It may have been deleted in another window."
+          error instanceof ScenarioNotFoundError || error instanceof FolderNotFoundError
+            ? `${error instanceof ScenarioNotFoundError ? 'This scenario' : 'This form'} no longer exists. It may have been deleted in another window.`
             : "Couldn't save the scenario. Try again.",
         )
       },

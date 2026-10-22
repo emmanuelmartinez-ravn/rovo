@@ -1,4 +1,5 @@
 import { formatEntries, targetEntry, type EdgeCase, type Entry, type Scenario } from '../scenarios/scenario.ts'
+import { resolvePlaceholders, type PlaceholderValues } from './placeholders.ts'
 
 /** How long a run keeps retrying one entry before it marks it as failed. */
 export const ENTRY_TIMEOUT_MS = 10_000
@@ -8,12 +9,16 @@ export type RunEntry = Entry & { scenarioValue?: string }
 
 /**
  * The entries a run fills, in path order: the scenario's own, or, with an
- * edge case, the same entries with the targeted one's value replaced.
+ * edge case, the same entries with the targeted one's value replaced. Every
+ * value, `scenarioValue` included, has its placeholders replaced by `values`.
  */
-export function runEntries(scenario: Scenario, edgeCase?: EdgeCase): RunEntry[] {
+export function runEntries(scenario: Scenario, values: PlaceholderValues, edgeCase?: EdgeCase): RunEntry[] {
   const target = edgeCase && targetEntry(scenario, edgeCase)
+  const resolve = (value: string) => resolvePlaceholders(value, values)
   return scenario.entries.map((entry) =>
-    entry === target && edgeCase ? { ...entry, value: edgeCase.value, scenarioValue: entry.value } : entry,
+    entry === target && edgeCase
+      ? { label: entry.label, value: resolve(edgeCase.value), scenarioValue: resolve(entry.value) }
+      : { label: entry.label, value: resolve(entry.value) },
   )
 }
 

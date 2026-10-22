@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { runScenarioInPage } from '../content/scenarioRunner.ts'
 import type { EdgeCase, Scenario } from '../scenarios/scenario.ts'
+import { placeholderValues, randomToken } from './placeholders.ts'
 import {
   ENTRY_TIMEOUT_MS,
   isRunEventMessage,
@@ -129,7 +130,8 @@ export function useScenarioRun(): {
 
   function start(scenario: Scenario, edgeCase?: EdgeCase) {
     setState({ status: 'starting' })
-    const entries = runEntries(scenario, edgeCase)
+    // Placeholders are worked out once, now: every one is the same throughout this run.
+    const entries = runEntries(scenario, placeholderValues(Date.now(), randomToken()), edgeCase)
     const id = crypto.randomUUID()
     void (async () => {
       try {

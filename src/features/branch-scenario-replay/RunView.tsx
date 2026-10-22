@@ -1,7 +1,8 @@
-import type { ReactNode } from 'react'
-import type { RunEntry, RunFailure } from '@/core/run/run.ts'
+import { useState, type ReactNode } from 'react'
+import { usedValuesText, type RunEntry, type RunFailure } from '@/core/run/run.ts'
 import type { Run, RunState, StepStatus } from '@/core/run/useScenarioRun.ts'
 import { Button } from '@/shared/ui/Button.tsx'
+import { CopyButton } from '@/shared/ui/CopyButton.tsx'
 import { Notice } from '@/shared/ui/Notice.tsx'
 import { RunStatusIcon } from './RunStatusIcon.tsx'
 import styles from './RunView.module.css'
@@ -18,6 +19,8 @@ type RunViewProps = {
 
 /** A run's progress, then its outcome (mockup screens 4, 6 and 7). */
 export function RunView({ state, onStop, onRunAgain, onEditScenario, onAddEdgeCase, onBack }: RunViewProps) {
+  // The run whose values couldn't be copied, so the notice doesn't outlive it.
+  const [copyFailedFor, setCopyFailedFor] = useState<string | null>(null)
   const back = (
     <button type="button" className={styles.textAction} onClick={onBack}>
       Back to scenarios
@@ -47,6 +50,20 @@ export function RunView({ state, onStop, onRunAgain, onEditScenario, onAddEdgeCa
   }
 
   const run = state
+  // The values this run started with, so later edits to the scenario don't change them.
+  const copyValues = (
+    <CopyButton
+      text={usedValuesText(run.entries, run.failure?.index)}
+      onCopied={() => setCopyFailedFor(null)}
+      onFailed={(error) => {
+        console.error('Failed to copy the run values', error)
+        setCopyFailedFor(run.id)
+      }}
+    >
+      Copy values
+    </CopyButton>
+  )
+
   return (
     <section className={styles.root}>
       <RunHeader run={run} />
@@ -61,6 +78,7 @@ export function RunView({ state, onStop, onRunAgain, onEditScenario, onAddEdgeCa
           entry.
         </p>
       )}
+      {copyFailedFor === run.id && <Notice>Couldn't copy the values. Try again.</Notice>}
       <div className={styles.actions}>
         {run.status === 'running' && (
           <Button variant="secondary" icon="stop" iconSize="tiny" disabled={run.stopRequested} onClick={onStop}>
@@ -72,6 +90,7 @@ export function RunView({ state, onStop, onRunAgain, onEditScenario, onAddEdgeCa
             <Button icon="refresh" iconSize="xs" onClick={onRunAgain}>
               Run again
             </Button>
+            {copyValues}
             <Button variant="secondary" className={styles.compactButton} onClick={onAddEdgeCase}>
               {run.edgeCase ? 'Try another edge case' : 'Add edge case'}
             </Button>
@@ -83,6 +102,7 @@ export function RunView({ state, onStop, onRunAgain, onEditScenario, onAddEdgeCa
             <Button icon="pencil" iconSize="xs" onClick={onEditScenario}>
               Edit scenario
             </Button>
+            {copyValues}
             <Button variant="secondary" onClick={onRunAgain}>
               Run again
             </Button>

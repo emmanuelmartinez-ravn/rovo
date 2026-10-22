@@ -12,6 +12,8 @@ type ScenarioCardProps = {
   onToggleEdgeCases: () => void
   onEdit: () => void
   onDelete: () => void
+  /** Moves the scenario to another form. Without it, there's no other form to move to. */
+  onMove?: () => void
   onRun: () => void
   onRunEdgeCase: (edgeCase: EdgeCase) => void
   onAddEdgeCase: () => void
@@ -25,6 +27,7 @@ export function ScenarioCard({
   onToggleEdgeCases,
   onEdit,
   onDelete,
+  onMove,
   onRun,
   onRunEdgeCase,
   onAddEdgeCase,
@@ -46,6 +49,7 @@ export function ScenarioCard({
           label={`More actions for ${scenario.name}`}
           actions={[
             { label: 'Edit scenario', icon: 'pencil', onSelect: onEdit },
+            ...(onMove ? [{ label: 'Move to another form', icon: 'folder' as const, onSelect: onMove }] : []),
             { label: 'Delete scenario', icon: 'trash', tone: 'danger', onSelect: onDelete },
           ]}
         />

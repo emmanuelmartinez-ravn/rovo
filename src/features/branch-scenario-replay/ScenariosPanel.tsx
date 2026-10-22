@@ -1,16 +1,22 @@
 import { useState, type ReactNode } from 'react'
+import type { Folder } from '@/core/scenarios/folder.ts'
 import type { EdgeCase, Scenario } from '@/core/scenarios/scenario.ts'
-import { deleteEdgeCase, deleteScenario } from '@/core/scenarios/scenarioStore.ts'
-import { useScenarios } from '@/core/scenarios/useScenarios.ts'
+import { deleteEdgeCase, deleteFolder, deleteScenario } from '@/core/scenarios/scenarioStore.ts'
+import { useFolders } from '@/core/scenarios/useFolders.ts'
 import { useScenarioRun } from '@/core/run/useScenarioRun.ts'
 import { useActiveTabDomain } from '@/core/tabs/useActiveTabDomain.ts'
+import { BackButton } from '@/shared/ui/BackButton.tsx'
 import { Banner } from '@/shared/ui/Banner.tsx'
 import { Button } from '@/shared/ui/Button.tsx'
 import { ConfirmDialog } from '@/shared/ui/ConfirmDialog.tsx'
 import { Notice } from '@/shared/ui/Notice.tsx'
 import { Skeleton } from '@/shared/ui/Skeleton.tsx'
 import { EdgeCaseEditor } from './EdgeCaseEditor.tsx'
+import { EmptyForms } from './EmptyForms.tsx'
 import { EmptyScenarios } from './EmptyScenarios.tsx'
+import { FormCard } from './FormCard.tsx'
+import { FormEditor } from './FormEditor.tsx'
+import { MoveScenario } from './MoveScenario.tsx'
 import { RunView } from './RunView.tsx'
 import { ScenarioCard } from './ScenarioCard.tsx'
 import { ScenarioEditor } from './ScenarioEditor.tsx'
@@ -19,7 +25,7 @@ import styles from './ScenariosPanel.module.css'
 /** What the delete confirmation is about. */
 type Deleting = { kind: 'scenario'; scenario: Scenario } | { kind: 'edgeCase'; scenario: Scenario; edgeCase: EdgeCase }
 
-/** Scenarios are saved per domain, so the panel follows the active tab's. */
+/** Forms are saved per domain, so the panel follows the active tab's. */
 export function ScenariosPanel() {
   const tab = useActiveTabDomain()
 
@@ -35,16 +41,154 @@ export function ScenariosPanel() {
       </section>
     )
   }
-  // Keyed by domain: switching sites starts over on the list, banner cleared.
-  return <DomainScenarios key={tab.domain} domain={tab.domain} />
+  // Keyed by domain: switching sites starts over on the forms list, banner cleared.
+  return <DomainForms key={tab.domain} domain={tab.domain} />
 }
 
-function DomainScenarios({ domain }: { domain: string }) {
-  const scenarios = useScenarios(domain)
+type FormsView =
+  | { kind: 'list' }
+  | { kind: 'editor'; editing?: Folder }
+  // `name` says which form it was if it's deleted while open.
+  | { kind: 'form'; id: string; name: string }
+
+/** The domain's forms, and the one open, if any. */
+function DomainForms({ domain }: { domain: string }) {
+  const folders = useFolders(domain)
+  const [view, setView] = useState<FormsView>({ kind: 'list' })
+  // Shown until the tester leaves the list.
+  const [banner, setBanner] = useState<string | null>(null)
+  const [problem, setProblem] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState<Folder | null>(null)
+
+  function show(next: FormsView) {
+    setBanner(null)
+    setProblem(null)
+    setView(next)
+  }
+
+  function confirmDelete() {
+    if (!deleting) {
+      return
+    }
+    const { id, name } = deleting
+    setDeleting(null)
+    deleteFolder(domain, id).then(
+      () => {
+        setProblem(null)
+        setBanner(`Form “${name}” deleted`)
+      },
+      (error: unknown) => {
+        console.error('Failed to delete form', error)
+        setBanner(null)
+        setProblem(`Couldn't delete “${name}”. Try again.`)
+      },
+    )
+  }
+
+  if (folders.status === 'loading') {
+    return <LoadingView />
+  }
+  if (folders.status === 'error') {
+    return (
+      <section className={styles.listView}>
+        <FormsHeading />
+        <Notice>Couldn't load the saved forms.</Notice>
+      </section>
+    )
+  }
+  if (view.kind === 'editor') {
+    const { editing } = view
+    return (
+      <FormEditor
+        domain={domain}
+        folders={folders.folders}
+        folder={editing}
+        onCancel={() => show({ kind: 'list' })}
+        onSaved={(name) => {
+          setView({ kind: 'list' })
+          setBanner(`Form “${name}” ${editing ? 'renamed' : 'saved'}`)
+        }}
+      />
+    )
+  }
+
+  const open = view.kind === 'form' ? folders.folders.find((folder) => folder.id === view.id) : undefined
+  if (open) {
+    // Keyed by form: leaving it and coming back starts over, edge cases collapsed.
+    return (
+      <FormScenarios
+        key={open.id}
+        domain={domain}
+        folder={open}
+        folders={folders.folders}
+        onBack={() => show({ kind: 'list' })}
+      />
+    )
+  }
+  // Still on a form that isn't there: it was deleted in another window.
+  const notice = view.kind === 'form' ? `The form “${view.name}” was deleted in another window.` : problem
+
+  const messages: ReactNode = (
+    <>
+      {banner && <Banner>{banner}</Banner>}
+      {notice && <Notice>{notice}</Notice>}
+    </>
+  )
+
+  if (folders.folders.length === 0) {
+    return (
+      <section className={styles.emptyView}>
+        {messages}
+        <FormsHeading />
+        <EmptyForms onNew={() => show({ kind: 'editor' })} />
+      </section>
+    )
+  }
+  return (
+    <section className={styles.listView}>
+      {messages}
+      <div className={styles.listHeader}>
+        <FormsHeading />
+        <Button variant="secondary" size="sm" icon="plus" onClick={() => show({ kind: 'editor' })}>
+          New
+        </Button>
+      </div>
+      <ul className={styles.list}>
+        {folders.folders.map((folder) => (
+          <FormCard
+            key={folder.id}
+            folder={folder}
+            onOpen={() => show({ kind: 'form', id: folder.id, name: folder.name })}
+            onRename={() => show({ kind: 'editor', editing: folder })}
+            onDelete={() => setDeleting(folder)}
+          />
+        ))}
+      </ul>
+      <ConfirmDialog
+        open={deleting !== null}
+        {...deleteFormCopy(deleting)}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleting(null)}
+      />
+    </section>
+  )
+}
+
+type FormScenariosProps = {
+  domain: string
+  folder: Folder
+  /** Every form on the domain, for moving a scenario to another. */
+  folders: readonly Folder[]
+  onBack: () => void
+}
+
+/** One form's scenarios: create, edit, run, edge cases and moves. */
+function FormScenarios({ domain, folder, folders, onBack }: FormScenariosProps) {
   const [view, setView] = useState<
     | { kind: 'list' }
     | { kind: 'editor'; editing?: Scenario }
     | { kind: 'edgeCaseEditor'; scenario: Scenario; editing?: EdgeCase }
+    | { kind: 'move'; scenario: Scenario }
     | { kind: 'run' }
   >({ kind: 'list' })
   const run = useScenarioRun()
@@ -77,6 +221,12 @@ function DomainScenarios({ domain }: { domain: string }) {
     setBanner(null)
     setProblem(null)
     setView({ kind: 'editor', editing })
+  }
+
+  function openMove(scenario: Scenario) {
+    setBanner(null)
+    setProblem(null)
+    setView({ kind: 'move', scenario })
   }
 
   function confirmDelete() {
@@ -114,8 +264,10 @@ function DomainScenarios({ domain }: { domain: string }) {
 
   /** The stored version of a run's scenario, which may have changed since it started. */
   function latest(scenario: Scenario): Scenario {
-    return (scenarios.status === 'ready' && scenarios.scenarios.find((s) => s.id === scenario.id)) || scenario
+    return folder.scenarios.find((s) => s.id === scenario.id) ?? scenario
   }
+
+  const targets = folders.filter((other) => other.id !== folder.id)
 
   if (view.kind === 'run' && run.state.status !== 'idle') {
     const current = run.state
@@ -140,6 +292,7 @@ function DomainScenarios({ domain }: { domain: string }) {
     return (
       <ScenarioEditor
         domain={domain}
+        folderId={folder.id}
         scenario={editing}
         onCancel={() => setView({ kind: 'list' })}
         onSaved={(name) => {
@@ -166,8 +319,20 @@ function DomainScenarios({ domain }: { domain: string }) {
       />
     )
   }
-  if (scenarios.status === 'loading') {
-    return <LoadingView />
+  if (view.kind === 'move') {
+    const { scenario } = view
+    return (
+      <MoveScenario
+        domain={domain}
+        scenario={scenario}
+        targets={targets}
+        onCancel={() => setView({ kind: 'list' })}
+        onMoved={(to) => {
+          setBanner(`Scenario “${scenario.name}” moved to “${to.name}”`)
+          setView({ kind: 'list' })
+        }}
+      />
+    )
   }
 
   const messages: ReactNode = (
@@ -177,19 +342,25 @@ function DomainScenarios({ domain }: { domain: string }) {
     </>
   )
 
-  if (scenarios.status === 'error') {
-    return (
-      <section className={styles.listView}>
-        <Heading />
-        <Notice>Couldn't load the saved scenarios.</Notice>
-      </section>
-    )
-  }
-  if (scenarios.scenarios.length === 0) {
+  const top = (
+    <div className={styles.top}>
+      <BackButton onClick={onBack}>Forms</BackButton>
+      <div className={styles.listHeader}>
+        <h2 className={styles.heading}>{folder.name}</h2>
+        {folder.scenarios.length > 0 && (
+          <Button variant="secondary" size="sm" icon="plus" onClick={() => openEditor()}>
+            New
+          </Button>
+        )}
+      </div>
+    </div>
+  )
+
+  if (folder.scenarios.length === 0) {
     return (
       <section className={styles.emptyView}>
         {messages}
-        <Heading />
+        {top}
         <EmptyScenarios onNew={() => openEditor()} />
       </section>
     )
@@ -197,14 +368,9 @@ function DomainScenarios({ domain }: { domain: string }) {
   return (
     <section className={styles.listView}>
       {messages}
-      <div className={styles.listHeader}>
-        <Heading />
-        <Button variant="secondary" size="sm" icon="plus" onClick={() => openEditor()}>
-          New
-        </Button>
-      </div>
+      {top}
       <ul className={styles.list}>
-        {scenarios.scenarios.map((scenario) => (
+        {folder.scenarios.map((scenario) => (
           <ScenarioCard
             key={scenario.id}
             scenario={scenario}
@@ -212,6 +378,7 @@ function DomainScenarios({ domain }: { domain: string }) {
             onToggleEdgeCases={() => toggleEdgeCases(scenario.id)}
             onEdit={() => openEditor(scenario)}
             onDelete={() => setDeleting({ kind: 'scenario', scenario })}
+            onMove={targets.length > 0 ? () => openMove(scenario) : undefined}
             onRun={() => startRun(scenario)}
             onRunEdgeCase={(edgeCase) => startRun(scenario, edgeCase)}
             onAddEdgeCase={() => openEdgeCaseEditor(scenario)}
@@ -231,6 +398,18 @@ function DomainScenarios({ domain }: { domain: string }) {
       />
     </section>
   )
+}
+
+function deleteFormCopy(folder: Folder | null): { title: string; body: string; confirmLabel: string } {
+  const count = folder?.scenarios.length ?? 0
+  return {
+    title: `Delete “${folder?.name ?? ''}”?`,
+    body:
+      count === 0
+        ? 'The form will be permanently deleted. This can’t be undone.'
+        : `The form and its ${count} scenario${count === 1 ? '' : 's'}, with their saved edge cases, will be permanently deleted. This can’t be undone.`,
+    confirmLabel: 'Delete form',
+  }
 }
 
 /** The mockup's wording for each kind of delete. */
@@ -255,11 +434,15 @@ function Heading() {
   return <h2 className={styles.heading}>Scenarios for this form</h2>
 }
 
+function FormsHeading() {
+  return <h2 className={styles.heading}>Forms on this site</h2>
+}
+
 function LoadingView() {
   return (
     <section className={styles.listView}>
-      <Heading />
-      <Skeleton label="Loading scenarios" />
+      <FormsHeading />
+      <Skeleton label="Loading forms" />
     </section>
   )
 }

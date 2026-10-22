@@ -1,0 +1,15 @@
+/* The picker comes from EdgeCaseEditor.module.css; a form is a destination, not an edge case, so it wears the accent. */
+.option {
+  --option-radio-accent: var(--color-accent);
+}
+
+.option:has(input:checked) {
+  --option-border-color: var(--color-accent);
+  --option-background: var(--color-accent-subtle);
+}
+
+.help {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-body);
+  color: var(--color-text);
+}

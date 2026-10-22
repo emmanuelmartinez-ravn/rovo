@@ -1,0 +1,7 @@
+/* The card comes from EmptyScenarios.module.css. */
+.icon {
+  --icon-color: var(--color-accent);
+
+  display: inline-flex;
+  color: var(--icon-color);
+}

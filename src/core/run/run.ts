@@ -1,4 +1,4 @@
-import { targetEntry, type EdgeCase, type Entry, type Scenario } from '../scenarios/scenario.ts'
+import { formatEntries, targetEntry, type EdgeCase, type Entry, type Scenario } from '../scenarios/scenario.ts'
 
 /** How long a run keeps retrying one entry before it marks it as failed. */
 export const ENTRY_TIMEOUT_MS = 10_000
@@ -15,6 +15,15 @@ export function runEntries(scenario: Scenario, edgeCase?: EdgeCase): RunEntry[] 
   return scenario.entries.map((entry) =>
     entry === target && edgeCase ? { ...entry, value: edgeCase.value, scenarioValue: entry.value } : entry,
   )
+}
+
+/**
+ * The values a run used, as `Label: value` lines in path order: every entry,
+ * or, when it failed at `failedIndex`, the entries up to and including the
+ * one it tried and couldn't fill. An edge case's entry carries its own value.
+ */
+export function usedValuesText(entries: readonly RunEntry[], failedIndex?: number): string {
+  return formatEntries(failedIndex === undefined ? entries : entries.slice(0, failedIndex + 1))
 }
 
 /** Why an entry couldn't be filled. */
